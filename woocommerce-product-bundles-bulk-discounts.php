@@ -606,6 +606,8 @@ class WC_PB_Quantity_Discount {
 		wp_register_script( 'wc-pb-bd-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-bd-add-to-cart' . $suffix . '.js', array(), self::$version );
 		wp_enqueue_script( 'wc-pb-bd-add-to-cart' );
 
+		wp_register_style( 'wc-pb-bd-styles', self::plugin_url() . '/assets/css/wc-pb-bd-styles.css', false, self::$version, 'all' );
+		wp_enqueue_style( 'wc-pb-bd-styles' );
 	}
 
 	/**
