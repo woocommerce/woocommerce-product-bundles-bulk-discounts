@@ -129,20 +129,18 @@ class WC_PB_Quantity_Discount {
 	 * PB version check notice.
 	 */
 	public static function version_notice() {
-		echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> requires Product Bundles  <strong>v%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> requires Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
 	 * Add bundle quantity discount option.
 	 *
-	 * @param  int    $id
-	 * @param  array  $data
-	 * @param  int    $product_id
+	 * @param  WC_Product  $product_bundle_object
 	 * @return void
 	 */
 	public static function product_bundles_bulk_discount( $product_bundle_object ) {
 
-		$discount_data_array  = $product_bundle_object ->get_meta( '_wc_pb_quantity_discount_data', true );
+		$discount_data_array  = $product_bundle_object->get_meta( '_wc_pb_quantity_discount_data', true );
 		$discount_data_string = self::decode( $discount_data_array );
 		woocommerce_wp_textarea_input( array(
 			'id'            => '_wc_pb_quantity_discount_data',
@@ -173,8 +171,7 @@ class WC_PB_Quantity_Discount {
 	}
 
 	/**
-	 * Decodes $discount_data_array to string
-	 * by sepeating quantity_min, quantity_max and discount.
+	 * Decodes $discount_data_array to string by separating quantity_min, quantity_max and discount.
 	 *
 	 * @param  array 	   $discount_data_array
 	 * @return string  	   $discount_data_string
@@ -200,8 +197,7 @@ class WC_PB_Quantity_Discount {
 	}
 
 	/**
-	 * Encodes $input_data string to array
-	 * by sepeating quantity_min, quantity_max and discount.
+	 * Encodes $input_data string to array by separating quantity_min, quantity_max and discount.
 	 *
 	 * @param  string  $input_data
 	 * @return array   $parsed_discount_data
@@ -255,8 +251,7 @@ class WC_PB_Quantity_Discount {
 						$quantity_min = $discount_line_dash_pieces[0];
 						$quantity_max = $quantity_min;
 
-						if ( strpos( $quantity_min, '+', -1 ) !== false ) {
-
+						if ( '+' === substr( $quantity_min, -1 ) ) {
 							$quantity_min = rtrim( $quantity_min, '+ ' );
 							$quantity_max = INF;
 						}
@@ -365,9 +360,7 @@ class WC_PB_Quantity_Discount {
 				$total_quantity     = 0;
 
 				foreach ( $bundled_items_data as $bundled_item_data ) {
-
 					if ( isset( $bundled_item_data[ 'quantity' ] ) ) {
-
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
@@ -407,7 +400,6 @@ class WC_PB_Quantity_Discount {
 		}
 
 		return $price;
-
 	}
 
 	/**
@@ -457,11 +449,11 @@ class WC_PB_Quantity_Discount {
 		// If product is bundle then get discount_data_array.
 		if ( $product->is_type( 'bundle' ) ) {
 
-			$bundle                    = wc_get_product( $product_id );
-			self::$discount_data_array = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+			$bundle              = wc_get_product( $product_id );
+			$discount_data_array = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
 
 			// If there exists a discount then get all min_quantities of the bundled items.
-			if ( ! empty( self::$discount_data_array ) && is_array( self::$discount_data_array ) ) {
+			if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
 
 				$total_min_quantity = 0;
 				$discount_applies   = false;
@@ -472,33 +464,36 @@ class WC_PB_Quantity_Discount {
 				}
 
 				// Check if the sum of min_quantity exists in a disount line.
-				foreach ( self::$discount_data_array as $line ) {
+				foreach ( $discount_data_array as $line ) {
 					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] ) {
 						$discount_applies = true;
 					}
 				}
 
-				self::$total_min_quantity = $total_min_quantity;
-
 				if ( $discount_applies ) {
+
+					self::$discount_data_array = $discount_data_array;
+					self::$total_min_quantity  = $total_min_quantity;
 
 					self::add_filters();
 
-					// Remove this filter so as to prevent infinite loop.
+					// Remove to prevent infinite loop.
 					remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
 
 					$price = $bundle->get_price_html();
 
+					// Add again.
+					add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
+
 					self::remove_filters();
 
-					// Add this filter again.
-					add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
+					self::$discount_data_array = array();
+					self::$total_min_quantity  = 0;
 				}
 			}
 		}
 
 		return $price;
-
 	}
 
 	/**
@@ -533,7 +528,6 @@ class WC_PB_Quantity_Discount {
 	 * @return boolean
 	 */
 	public static function apply_discount_to_base_price( $bundle ) {
-
 		return apply_filters( 'wc_pb_bulk_discount_apply_to_base_price', false, $bundle );
 	}
 
@@ -543,7 +537,6 @@ class WC_PB_Quantity_Discount {
 	 * @return void
 	 */
 	public static function add_filters() {
-
 		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 	}
@@ -554,7 +547,6 @@ class WC_PB_Quantity_Discount {
 	 * @return void
 	 */
 	public static function remove_filters() {
-
 		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 	}
@@ -567,9 +559,14 @@ class WC_PB_Quantity_Discount {
 	 */
 	public static function add_bundle_discount_price_html_suffix( $bundled_item ) {
 
-		if ( ! empty( self::$discount_data_array ) && is_array( self::$discount_data_array ) ) {
-			add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'add_discount_price_html_suffix' ), 100, 2 );
+		$bundle              = $bundled_item->get_bundle();
+		$discount_data_array = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+
+		if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
+			self::$discount_data_array = $discount_data_array;
 		}
+
+		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'add_discount_price_html_suffix' ), 100, 2 );
 	}
 
 	/**
@@ -580,7 +577,11 @@ class WC_PB_Quantity_Discount {
 	 * @return string  $price_html
 	 */
 	public static function add_discount_price_html_suffix( $price_html, $product ) {
-		$price_html = sprintf( __( '%s <small>(before discount)</small>', 'woocommerce-product-bundles-bulk-discounts' ), $price_html );
+
+		if ( ! empty( self::$discount_data_array ) && is_array( self::$discount_data_array ) ) {
+			$price_html = sprintf( __( '%s <small>(before discount)</small>', 'woocommerce-product-bundles-bulk-discounts' ), $price_html );
+		}
+
 		return $price_html;
 	}
 
@@ -591,6 +592,7 @@ class WC_PB_Quantity_Discount {
 	 * @return void
 	 */
 	public static function remove_add_discount_price_html_suffix_filter( $bundled_item ) {
+		self::$discount_data_array = array();
 		remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'add_discount_price_html_suffix' ), 100, 2 );
 	}
 
