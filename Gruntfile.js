@@ -35,7 +35,8 @@ module.exports = function( grunt ) {
 					'$': false,
 					'Backbone': false,
 					'_': false,
-					'wc_composite_params': false
+					'wc_bundle_params': false,
+					'wc_pb_number_round': false
 				},
 			},
 			all: [
