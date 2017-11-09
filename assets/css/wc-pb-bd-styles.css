@@ -1,17 +1,17 @@
-.composite_price .price .price-subtotal, .composite_price .price .price-discount, .composite_price .price .price-total {
+.bundle_price .price .price-subtotal, .bundle_price .price .price-discount, .bundle_price .price .price-total {
 	display: block;
 	margin: 0 0 0.5em;
 }
 
-.composite_form .composite_price .price .price-subtotal, .composite_form .composite_price .price .price-discount {
+.bundle_form .bundle_price .price .price-subtotal, .bundle_form .bundle_price .price .price-discount {
 	font-size: 0.85em;
 }
 
-.composite_form .composite_price .price-total {
+.bundle_form .bundle_price .price-total {
 	margin: 1em 0 0.5em;
 }
 
-.composite_form .composite_price .price-subtotal span.total, .composite_form .composite_price .price-total span.total, .composite_form .composite_price .price-discount span.discount {
+.bundle_form .bundle_price .price-subtotal span.total, .bundle_form .bundle_price .price-total span.total, .bundle_form .bundle_price .price-discount span.discount {
 	min-width: 120px;
 	display: inline-block;
 }
