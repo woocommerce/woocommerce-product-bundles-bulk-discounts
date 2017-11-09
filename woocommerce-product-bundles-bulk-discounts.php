@@ -117,11 +117,11 @@ class WC_PB_Quantity_Discount {
 		add_action( 'woocommerce_bundle_add_to_cart', array( __CLASS__, 'script' ) );
         add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
 
-		// // Update settings to add parameters.
-		// add_filter( 'woocommerce_composite_add_to_cart_form_settings', array( __CLASS__, 'add_global_discount_array_field' ), 10, 2 );
+		// Add parameters to bundle price data.
+		add_filter( 'woocommerce_bundle_price_data', array( __CLASS__, 'add_discount_data' ), 10, 2 );
 
 		// // Update front-end parameters to add 'After discount'.
-		// add_filter( 'woocommerce_composite_front_end_params', array( __CLASS__, 'add_total_discount_front_end_param' ), 10, 1 );
+		add_filter( 'woocommerce_bundle_front_end_params', array( __CLASS__, 'add_front_end_params' ), 10, 1 );
 
 	}
 
@@ -611,14 +611,31 @@ class WC_PB_Quantity_Discount {
 	/**
 	 * Update settings to add parameters.
 	 *
-	 * @param  array  $settings
-	 * @param  array  $composite
+	 * @param  array  $price_data
+	 * @param  array  $bundle
 	 * @return array
 	 */
-	public static function add_global_discount_array_field( $settings, $composite ) {
-		 $settings[ 'global_discount_array' ] = self::$discount_data_array;
-		 $settings[ 'apply_discount_to_base'] = self::apply_discount_to_base_price( $composite );
-		 return $settings;
+	public static function add_discount_data( $price_data, $bundle ) {
+
+		$discount_data_array = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+
+		if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
+
+			// INF cannot be JSON-encoded :)
+			foreach ( $discount_data_array as $line_key => $line ) {
+				if ( isset( $line[ 'quantity_max' ] ) && is_infinite( $line[ 'quantity_max' ] ) ) {
+					$discount_data_array[ $line_key ][ 'quantity_max' ] = '';
+				}
+			}
+
+			$price_data[ 'bulk_discount_data' ] = array(
+				'discount'       => '',
+				'discount_array' => $discount_data_array,
+				'discount_base'  => self::apply_discount_to_base_price( $bundle ) ? 'yes' : 'no'
+			);
+		}
+
+		return $price_data;
 	}
 
 	/**
@@ -627,12 +644,12 @@ class WC_PB_Quantity_Discount {
 	 * @param  array  $parameter_array
 	 * @return array
 	 */
-	public static function add_total_discount_front_end_param( $parameter_array ) {
+	public static function add_front_end_params( $parameter_array ) {
 
-		$parameter_array[ 'i18n_bulk_discount_subtotal' ] = __( 'Subtotal: ', 'woocommerce-composite-products-bulk-discounts' );
-		$parameter_array[ 'i18n_bulk_discount' ]          = __( 'Discount: ', 'woocommerce-composite-products-bulk-discounts' );
-		$parameter_array[ 'i18n_bulk_discount_value' ]    = sprintf( __( '%s%%', 'woocommerce-composite-products-bulk-discounts' ), '%v' );
-		$parameter_array[ 'i18n_bulk_discount_format' ]   = sprintf( _x( '%1$s%2$s', '"Discount" string followed by value', 'woocommerce-composite-products-bulk-discounts' ), '%s', '%v' );
+		$parameter_array[ 'i18n_bulk_discount_subtotal' ] = __( 'Subtotal: ', 'woocommerce-product-bundles-bulk-discounts' );
+		$parameter_array[ 'i18n_bulk_discount' ]          = __( 'Discount: ', 'woocommerce-product-bundles-bulk-discounts' );
+		$parameter_array[ 'i18n_bulk_discount_value' ]    = sprintf( __( '%s%%', 'woocommerce-product-bundles-bulk-discounts' ), '%v' );
+		$parameter_array[ 'i18n_bulk_discount_format' ]   = sprintf( _x( '%1$s%2$s', '"Discount" string followed by value', 'woocommerce-product-bundles-bulk-discounts' ), '%s', '%v' );
 
 		return $parameter_array;
 	}
