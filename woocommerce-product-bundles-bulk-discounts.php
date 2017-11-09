@@ -29,25 +29,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Quantity_Discount {
 
-	public static $version        = '1.0.0';
-	public static $req_pb_version = '5.5.1';
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 */
+	public static $version = '1.0.0';
 
+	/**
+	 * Min required PB version.
+	 *
+	 * @var string
+	 */
+	public static $req_pb_version = '5.6';
+
+	/**
+	 * Discount data array for access via filter callbacks -- internal use only.
+	 *
+	 * @var array
+	 */
 	public static $discount_data_array = array();
+
+	/**
+	 * Total min Qty for access via filter callbacks -- internal use only.
+	 *
+	 * @var array
+	 */
 	public static $total_min_quantity  = 0;
 
+	/**
+	 * Plugin URL.
+	 *
+	 * @return string
+	 */
 	public static function plugin_url() {
 		return plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename(__FILE__) );
 	}
 
+	/**
+	 * Plugin path.
+	 *
+	 * @return string
+	 */
 	public static function plugin_path() {
 		return untrailingslashit( plugin_dir_path( __FILE__ ) );
 	}
 
+	/**
+	 * Fire in the hole!
+	 */
 	public static function init() {
 		add_action( 'plugins_loaded', array( __CLASS__, 'load_plugin' ) );
 	}
 
+	/**
+	 * Hooks.
+	 */
 	public static function load_plugin() {
+
 		if ( ! function_exists( 'WC_PB' ) || version_compare( WC_PB()->version, self::$req_pb_version ) < 0 ) {
 			add_action( 'admin_notices', array( __CLASS__, 'version_notice' ) );
 			return false;
