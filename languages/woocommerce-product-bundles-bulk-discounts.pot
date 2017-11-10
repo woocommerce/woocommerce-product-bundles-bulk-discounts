@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Product Bundles - Bulk Discounts 1.0.0\n"
 "Report-Msgid-Bugs-To: support@somewherewarm.gr\n"
-"POT-Creation-Date: 2017-11-09 20:54:49+00:00\n"
+"POT-Creation-Date: 2017-11-10 12:20:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -46,19 +46,19 @@ msgstr ""
 msgid "Line <strong> %s </strong> not saved. Invalid discount."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:582
+#: woocommerce-product-bundles-bulk-discounts.php:592
 msgid "%s <small>(before discount)</small>"
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:653
+#: woocommerce-product-bundles-bulk-discounts.php:663
 msgid "Subtotal: "
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:654
+#: woocommerce-product-bundles-bulk-discounts.php:664
 msgid "Discount: "
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:655
+#: woocommerce-product-bundles-bulk-discounts.php:665
 msgid "%s%%"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "http://somewherewarm.gr/"
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:656
+#: woocommerce-product-bundles-bulk-discounts.php:666
 msgctxt "\"Discount\" string followed by value"
 msgid "%1$s%2$s"
 msgstr ""

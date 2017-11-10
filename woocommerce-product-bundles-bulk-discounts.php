@@ -444,20 +444,17 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function bundle_get_discounted_price_html( $price, $product ) {
 
-		$product_id = $product->get_id();
-
 		// If product is bundle then get discount_data_array.
 		if ( $product->is_type( 'bundle' ) ) {
 
-			$bundle              = wc_get_product( $product_id );
-			$discount_data_array = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+			$discount_data_array = $product->get_meta( '_wc_pb_quantity_discount_data', true );
 
 			// If there exists a discount then get all min_quantities of the bundled items.
 			if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
 
 				$total_min_quantity = 0;
 				$discount_applies   = false;
-				$bundled_items      = $bundle->get_bundled_items();
+				$bundled_items      = $product->get_bundled_items();
 
 				foreach ( $bundled_items as $value ) {
 					$total_min_quantity += $value->get_quantity( 'min' );
@@ -480,7 +477,7 @@ class WC_PB_Bulk_Discounts {
 					// Remove to prevent infinite loop.
 					remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
 
-					$price = $bundle->get_price_html();
+					$price = $product->get_price_html();
 
 					// Add again.
 					add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
@@ -494,6 +491,17 @@ class WC_PB_Bulk_Discounts {
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Modify the bundle prices hash to go around the runtime cache.
+	 *
+	 * @param array              $hash
+	 * @param WC_Product_Bundle  $bundle
+	 */
+	public static function add_discounted_prices_hash( $hash, $bundle ) {
+		$hash[] = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+		return $hash;
 	}
 
 	/**
@@ -537,6 +545,7 @@ class WC_PB_Bulk_Discounts {
 	 * @return void
 	 */
 	public static function add_filters() {
+		add_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
 		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 	}
@@ -547,6 +556,7 @@ class WC_PB_Bulk_Discounts {
 	 * @return void
 	 */
 	public static function remove_filters() {
+		remove_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
 		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 	}
