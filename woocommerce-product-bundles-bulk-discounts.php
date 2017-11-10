@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-class WC_PB_Quantity_Discount {
+class WC_PB_Bulk_Discounts {
 
 	/**
 	 * Plugin version.
@@ -659,4 +659,4 @@ class WC_PB_Quantity_Discount {
 	}
 }
 
-WC_PB_Quantity_Discount::init();
+WC_PB_Bulk_Discounts::init();
