@@ -87,10 +87,15 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function load_plugin() {
 
+		// Check dependencies.
 		if ( ! function_exists( 'WC_PB' ) || version_compare( WC_PB()->version, self::$req_pb_version ) < 0 ) {
 			add_action( 'admin_notices', array( __CLASS__, 'version_notice' ) );
 			return false;
 		}
+
+		/*
+		 * Admin.
+		 */
 
 		// Display bundle quantity discount option.
 		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'product_bundles_bulk_discount' ), 16 );
@@ -98,83 +103,77 @@ class WC_PB_Bulk_Discounts {
 		// Save discount data.
 		add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'save_meta' ) );
 
-		// Applies discount on bundled cart items based on overall cart quantity.
+		/*
+		 * Cart.
+		 */
+
+		// Apply discount to bundled cart items.
 		add_filter( 'woocommerce_bundled_cart_item', array( __CLASS__, 'bundled_cart_item_discount' ), 10, 2 );
 
-		// Applies discount on bundle container cart item based on overall cart quantity.
+		// Apply discount to bundle container cart items.
 		add_filter( 'woocommerce_bundle_container_cart_item', array( __CLASS__, 'bundle_container_cart_item_discount' ), 10, 2 );
 
-		// Returns discounted price based on default min quantities.
+		/*
+		 * Products / Catalog.
+		 */
+
+		// Modify the catalog price to include discounts for the default min quantities.
 		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10 , 2 );
 
-		// Calls filter to add a suffix to price_html if some discount applies.
+		// Add a suffix to bundled product prices.
 		add_action( 'woocommerce_bundled_product_price_filters_added', array( __CLASS__, 'add_bundle_discount_price_html_suffix' ), 10, 1 );
-
-		// Removes filter.
-		add_action( 'woocommerce_bundled_product_price_filters_removed', array( __CLASS__, 'remove_add_discount_price_html_suffix_filter' ), 10, 1 );
+		add_action( 'woocommerce_bundled_product_price_filters_removed', array( __CLASS__, 'remove_bundle_discount_price_html_suffix' ), 10, 1 );
 
 		// Bootstrapping.
 		add_action( 'woocommerce_bundle_add_to_cart', array( __CLASS__, 'script' ) );
-        add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
+		add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
 
 		// Add parameters to bundle price data.
 		add_filter( 'woocommerce_bundle_price_data', array( __CLASS__, 'add_discount_data' ), 10, 2 );
 
-		// // Update front-end parameters to add 'After discount'.
+		// Parameters passed to the script.
 		add_filter( 'woocommerce_bundle_front_end_params', array( __CLASS__, 'add_front_end_params' ), 10, 1 );
-
 	}
 
-	/**
-	 * PB version check notice.
-	 */
-	public static function version_notice() {
-		echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> requires Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
-	}
+	/*
+	|--------------------------------------------------------------------------
+	| Application layer.
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
-	 * Add bundle quantity discount option.
+	 * Calculates a discounted price based on quantity and a discount data array.
 	 *
-	 * @param  WC_Product  $product_bundle_object
-	 * @return void
+	 * @param  mixed    $price
+	 * @param  integer  $total_quantity
+	 * @param  array    $discount_data_array
+	 * @return mixed    $price
 	 */
-	public static function product_bundles_bulk_discount( $product_bundle_object ) {
+	public static function calculate_discount( $price, $total_quantity, $discount_data_array ) {
 
-		$discount_data_array  = $product_bundle_object->get_meta( '_wc_pb_quantity_discount_data', true );
-		$discount_data_string = self::decode( $discount_data_array );
-		woocommerce_wp_textarea_input( array(
-			'id'            => '_wc_pb_quantity_discount_data',
-			'wrapper_class' => 'bundled_product_data_field',
-			'value'         => $discount_data_string,
-			'label'         => __( 'Quantity Discounts', 'woocommerce-product-bundles-bulk-discounts' ),
-			'desc_tip'      => true,
-			'description'   => __( 'Define bulk discounts here. Add one discount per line using either a quantity range format, e.g. <strong>1 - 5 | 5%</strong> or a single quantity format, e.g. <strong>6 | 10%</strong>. ', 'woocommerce-product-bundles-bulk-discounts' )
-		) );
-	}
+		foreach ( $discount_data_array as $lines ) {
 
-	/**
-	 * Save meta.
-	 *
-	 * @param  WC_Product  $product
-	 * @return void
-	 */
-	public static function save_meta( $product ) {
+			if ( isset( $lines[ 'quantity_min' ], $lines[ 'quantity_max' ], $lines[ 'discount' ] ) ) {
 
-		$input_data           = $_POST[ '_wc_pb_quantity_discount_data' ];
-		$parsed_discount_data = self::encode( $input_data );
+				$quantity_min = $lines[ 'quantity_min' ];
+				$quantity_max = $lines[ 'quantity_max' ];
+				$discount     = $lines[ 'discount' ];
 
-		if ( ! empty( $_POST[ '_wc_pb_quantity_discount_data' ] ) ) {
-			$product->add_meta_data( '_wc_pb_quantity_discount_data', $parsed_discount_data, true );
-		} else {
-			$product->delete_meta_data( '_wc_pb_quantity_discount_data' );
+				if ( $total_quantity >= $quantity_min && $total_quantity <= $quantity_max ) {
+					$price = (double) ( ( 100 - $discount ) * $price ) / 100 ;
+					break;
+				}
+			}
 		}
+
+		return $price;
 	}
 
 	/**
-	 * Decodes $discount_data_array to string by separating quantity_min, quantity_max and discount.
+	 * Decodes a discount data array to a human-readable format.
 	 *
-	 * @param  array 	   $discount_data_array
-	 * @return string  	   $discount_data_string
+	 * @param  array   $discount_data_array
+	 * @return string  $discount_data_string
 	 */
 	private static function decode( $discount_data_array ) {
 
@@ -339,6 +338,79 @@ class WC_PB_Bulk_Discounts {
 	}
 
 	/**
+	 * Whether to apply discounts to the base price.
+	 *
+	 * @param  array    $bundle
+	 * @return boolean
+	 */
+	public static function apply_discount_to_base_price( $bundle ) {
+		/**
+		 * 'wc_pb_bulk_discount_apply_to_base_price' filter.
+		 *
+		 * @param  bool               $apply
+		 * @param  WC_Product_Bundle  $bundle
+		 */
+		return apply_filters( 'wc_pb_bulk_discount_apply_to_base_price', false, $bundle );
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Admin and Metaboxes.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
+	 * PB version check notice.
+	 */
+	public static function version_notice() {
+		echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> requires Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
+	}
+
+	/**
+	 * Add bundle quantity discount option.
+	 *
+	 * @param  WC_Product  $product_bundle_object
+	 * @return void
+	 */
+	public static function product_bundles_bulk_discount( $product_bundle_object ) {
+
+		$discount_data_array  = $product_bundle_object->get_meta( '_wc_pb_quantity_discount_data', true );
+		$discount_data_string = self::decode( $discount_data_array );
+		woocommerce_wp_textarea_input( array(
+			'id'            => '_wc_pb_quantity_discount_data',
+			'wrapper_class' => 'bundled_product_data_field',
+			'value'         => $discount_data_string,
+			'label'         => __( 'Bulk discounts', 'woocommerce-product-bundles-bulk-discounts' ),
+			'description'   => __( 'Define bulk discounts here. Add one discount per line in either: i) quantity range format, e.g. <strong>1 - 5 | 5%</strong>, ii) single quantity format, e.g. <strong>6 | 10%</strong>, or iii) "equal to or higher" format, e.g. <strong>7+ | 15%</strong>. ', 'woocommerce-product-bundles-bulk-discounts' ),
+			'desc_tip'      => true
+		) );
+	}
+
+	/**
+	 * Save meta.
+	 *
+	 * @param  WC_Product  $product
+	 * @return void
+	 */
+	public static function save_meta( $product ) {
+
+		$input_data           = $_POST[ '_wc_pb_quantity_discount_data' ];
+		$parsed_discount_data = self::encode( $input_data );
+
+		if ( ! empty( $_POST[ '_wc_pb_quantity_discount_data' ] ) ) {
+			$product->add_meta_data( '_wc_pb_quantity_discount_data', $parsed_discount_data, true );
+		} else {
+			$product->delete_meta_data( '_wc_pb_quantity_discount_data' );
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Cart.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
 	 * Applies discount on bundled cart items based on overall cart quantity.
 	 *
 	 * @param  array  $cart_item
@@ -375,34 +447,6 @@ class WC_PB_Bulk_Discounts {
 	}
 
 	/**
-	 * Calculates the discount based on the overall cart item quantity and returns discounted price.
-	 *
-	 * @param  mixed    $price
-	 * @param  integer  $total_quantity
-	 * @param  array    $discount_data_array
-	 * @return mixed    $price
-	 */
-	public static function calculate_discount( $price, $total_quantity, $discount_data_array ) {
-
-		foreach ( $discount_data_array as $lines ) {
-
-			if ( isset( $lines[ 'quantity_min' ], $lines[ 'quantity_max' ], $lines[ 'discount' ] ) ) {
-
-				$quantity_min = $lines[ 'quantity_min' ];
-				$quantity_max = $lines[ 'quantity_max' ];
-				$discount     = $lines[ 'discount' ];
-
-				if ( $total_quantity >= $quantity_min && $total_quantity <= $quantity_max ) {
-					$price = (double) ( ( 100 - $discount ) * $price ) / 100 ;
-					break;
-				}
-			}
-		}
-
-		return $price;
-	}
-
-	/**
 	 * Applies discount on bundle container cart item based on overall cart quantity.
 	 *
 	 * @param  array  $cart_item
@@ -411,7 +455,7 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function bundle_container_cart_item_discount( $cart_item, $bundle ) {
 
-		if ( wc_pb_is_bundle_container_cart_item( $cart_item ) && self::apply_discount_to_base_price( $bundle) ) {
+		if ( wc_pb_is_bundle_container_cart_item( $cart_item ) && self::apply_discount_to_base_price( $bundle ) ) {
 
 			$discount_data_array = $cart_item[ 'data' ]->get_meta( '_wc_pb_quantity_discount_data', true );
 			$price               = $cart_item[ 'data' ]->get_price();
@@ -434,6 +478,12 @@ class WC_PB_Bulk_Discounts {
 
 		return $cart_item;
 	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Products / Catalog.
+	|--------------------------------------------------------------------------
+	*/
 
 	/**
 	 * Returns discounted price based on default min quantities.
@@ -494,7 +544,29 @@ class WC_PB_Bulk_Discounts {
 	}
 
 	/**
-	 * Modify the bundle prices hash to go around the runtime cache.
+	 * Add filters to modify products when contained in Bundles.
+	 *
+	 * @return void
+	 */
+	public static function add_filters() {
+		add_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
+		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+	}
+
+	/**
+	 * Remove filters - @see 'add_filters'.
+	 *
+	 * @return void
+	 */
+	public static function remove_filters() {
+		remove_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
+		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+	}
+
+	/**
+	 * Modify bundle prices hash to go around the runtime cache.
 	 *
 	 * @param array              $hash
 	 * @param WC_Product_Bundle  $bundle
@@ -527,38 +599,6 @@ class WC_PB_Bulk_Discounts {
 		}
 
 		return $price;
-	}
-
-	/**
-	 * Determines if discount is applied to base price.
-	 *
-	 * @param  array    $bundle
-	 * @return boolean
-	 */
-	public static function apply_discount_to_base_price( $bundle ) {
-		return apply_filters( 'wc_pb_bulk_discount_apply_to_base_price', false, $bundle );
-	}
-
-	/**
-	 * Add filters to modify products when contained in Bundles.
-	 *
-	 * @return void
-	 */
-	public static function add_filters() {
-		add_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
-		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
-		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
-	}
-
-	/**
-	 * Remove filters - @see 'add_filters'.
-	 *
-	 * @return void
-	 */
-	public static function remove_filters() {
-		remove_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
-		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
-		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
 	}
 
 	/**
@@ -598,10 +638,10 @@ class WC_PB_Bulk_Discounts {
 	/**
 	 * Removes filter.
 	 *
-	 * @param  array   $bundled_item
+	 * @param  array  $bundled_item
 	 * @return void
 	 */
-	public static function remove_add_discount_price_html_suffix_filter( $bundled_item ) {
+	public static function remove_bundle_discount_price_html_suffix( $bundled_item ) {
 		self::$discount_data_array = array();
 		remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'add_discount_price_html_suffix' ), 100, 2 );
 	}

@@ -14,4 +14,4 @@ Bulk discounts for Product Bundles.
 
 == Description ==
 
-Offer bulk discounts in Product Bundles by mapping bundled product quantities (range or single value) to discount values.
+Offer bulk discounts in Product Bundles by associating bundled product quantities (range or single value) with discount values.
