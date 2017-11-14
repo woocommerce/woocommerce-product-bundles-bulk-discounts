@@ -8,9 +8,9 @@ Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/product
 
 To add bulk discounts to a Product Bundle, navigate to **Product Data > Bundled Products** tab and locate the **Bulk discounts** field. Add one discount rule per line using:
 
-* quantity range format, e.g. **1 - 5 | 5%**;
-* single quantity format, e.g. **6 | 10%**; or
-* "equal to or higher" format, e.g. **7+ | 15%**.
+* quantity range format - e.g. **1 - 5 | 5%**
+* single quantity format - e.g. **6 | 10%**
+* "equal to or higher" format - e.g. **7+ | 15%**
 
 <img width="872" alt="Adding bulk discount rules." src="https://user-images.githubusercontent.com/1783726/32771261-da48d44e-c92a-11e7-8ec5-a504949e9287.png">
 
