@@ -12,7 +12,7 @@ To add bulk discounts to a Product Bundle, navigate to **Product Data > Bundled 
 * single quantity format - e.g. **6 | 10%**
 * "equal to or higher" format - e.g. **7+ | 15%**
 
-<img width="872" alt="Adding bulk discount rules." src="https://user-images.githubusercontent.com/1783726/32771261-da48d44e-c92a-11e7-8ec5-a504949e9287.png">
+<img width="804" alt="Adding bulk discount rules." src="https://user-images.githubusercontent.com/1783726/32772873-fecc3c3e-c92f-11e7-96a5-a3626589ea12.png">
 
 ### Bulk Discounts in Product Bundles
 
@@ -22,7 +22,7 @@ When a Product Bundle with bulk discounts is configured, the price total that's 
 * The applicable **Discount** amount.
 * The final **Total** (price after discount).
 
-<img width="1162" alt="Bulk discounts in Product Bundle pages" src="https://user-images.githubusercontent.com/1783726/32771731-58019596-c92c-11e7-8861-ad801c448d99.png">
+<img width="1168" alt="Purchasing a Bundle with bulk discounts." src="https://user-images.githubusercontent.com/1783726/32772911-1d0c0bc0-c930-11e7-9bac-8727a7def01f.png">
 
 ### Note
 
