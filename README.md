@@ -1,25 +1,38 @@
-# WooCommerce Product Bundles - Bundle-Sells
+# WooCommerce Product Bundles - Bundle Discounts
 
 ### What's This?
 
 Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) that allows you offer bulk discounts in Product Bundles by associating bundled product quantities with discount values.
 
-### Using Bundle-Sells
+### Adding Bulk Discounts
 
-Bundle-Sells can be added to any product by navigating to **Product Data > Linked Products** tab and adding some products to the "Bundle-Sells" box.
+To define bulk discounts for a Product Bundle, navigate to **Product Data > Bundled Products** tab and use the **Bulk discounts** field to add quantity vs. discount rules. Add one discount per line using:
 
-<img width="1049" alt="Adding Bundle-Sells" src="https://user-images.githubusercontent.com/1783726/32737971-2eb3af40-c8a4-11e7-96e2-035f5879683d.png">
+* quantity range format, e.g. **1 - 5 | 5%**;
+* single quantity format, e.g. **6 | 10%**; or
+* "equal to or higher" format, e.g. **7+ | 15%**.
 
-Bundle-Sells are displayed above the add-to-cart button in single product pages. They can be selected and added to the cart along with the viewed product:
+<img width="872" alt="Adding bulk discount rules." src="https://user-images.githubusercontent.com/1783726/32771261-da48d44e-c92a-11e7-8ec5-a504949e9287.png">
 
-<img width="1190" alt="Offering Bundle-Sells" src="https://user-images.githubusercontent.com/1783726/32737946-1d3444c8-c8a4-11e7-965f-cd0a855e4ec6.png">
+### Bulk Discounts in Product Bundles
 
-At core, bundle-sells share many similarities with cross-sells. Compared to cross-sells, bundle-sells:
+When a Product Bundle with bulk discounts is configured, the price total that's normally displayed above the add-to-cart button changes slightly to include some extra information:
 
-* are easier to discover; and
-* convert immediately.
+* The current **Subtotal** (price before discount).
+* The current **Discount** amount.
+* The final **Total** (price after discount).
 
-However, bundle-sells _must_ be used sparingly -- offerring many and/or unrelated options may have a negative impact on conversion. Use bundle-sells to offer **relevant**, **helpful** recommendations. If in doubt, look for strong, **data-driven evidence** to support your decisions.
+<img width="1162" alt="Bulk discounts in Product Bundle pages" src="https://user-images.githubusercontent.com/1783726/32771731-58019596-c92c-11e7-8861-ad801c448d99.png">
+
+### Note
+
+By default, bulk discounts are applied to the prices of all bundled products that are **Priced Individually**.
+
+If a Product Bundle with bulk discount rules has a static/base Regular Price and/or Sale Price, its static/base price component will remain unchanged.
+
+To discount static/base bundle prices, use the following snippet:
+
+`add_filter( 'wc_pb_bulk_discount_apply_to_base_price', '__return_true' );`
 
 ### Important
 

@@ -381,7 +381,7 @@ class WC_PB_Bulk_Discounts {
 			'wrapper_class' => 'bundled_product_data_field',
 			'value'         => $discount_data_string,
 			'label'         => __( 'Bulk discounts', 'woocommerce-product-bundles-bulk-discounts' ),
-			'description'   => __( 'Define bulk discounts here. Add one discount per line in either: i) quantity range format, e.g. <strong>1 - 5 | 5%</strong>, ii) single quantity format, e.g. <strong>6 | 10%</strong>, or iii) "equal to or higher" format, e.g. <strong>7+ | 15%</strong>. ', 'woocommerce-product-bundles-bulk-discounts' ),
+			'description'   => __( 'Define bulk discounts here. Add one discount per line in either: i) quantity range format, e.g. <strong>1 - 5 | 5%</strong>, ii) single quantity format, e.g. <strong>6 | 10%</strong>, or iii) "equal to or higher" format, e.g. <strong>7+ | 15%</strong>.', 'woocommerce-product-bundles-bulk-discounts' ),
 			'desc_tip'      => true
 		) );
 	}
