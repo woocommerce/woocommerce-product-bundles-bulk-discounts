@@ -183,11 +183,11 @@ class WC_PB_Bulk_Discounts {
 			foreach ( $discount_data_array as $i => $discount_line) {
 
 				if ( $discount_line[ 'quantity_min' ] === $discount_line[ 'quantity_max'] ) {
-					$discount_data_string  = $discount_data_string . $discount_line[ 'quantity_min' ] . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
+					$discount_data_string = $discount_data_string . $discount_line[ 'quantity_min' ] . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
 				} elseif ( is_infinite( $discount_line[ 'quantity_max' ] ) ) {
-					$discount_data_string  = $discount_data_string . $discount_line[ 'quantity_min' ] . '+' . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
+					$discount_data_string = $discount_data_string . $discount_line[ 'quantity_min' ] . '+' . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
 				} else {
-					$discount_data_string  = $discount_data_string . $discount_line[ 'quantity_min' ] . ' ' . '-' . ' ' . $discount_line[ 'quantity_max' ] . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
+					$discount_data_string = $discount_data_string . $discount_line[ 'quantity_min' ] . ' ' . '-' . ' ' . $discount_line[ 'quantity_max' ] . ' ' . '|' . ' ' . $discount_line[ 'discount' ]. "\n";
 				}
 			}
 		}
@@ -305,17 +305,17 @@ class WC_PB_Bulk_Discounts {
 						if ( is_infinite( $quantity_max ) ) {
 
 							$parsed_discount_data[] = array(
-							'quantity_min' => intval( $quantity_min ),
-							'quantity_max' => INF,
-							'discount'     => floatval( $discount_line_seperator_pieces[1])
+								'quantity_min' => intval( $quantity_min ),
+								'quantity_max' => INF,
+								'discount'     => floatval( $discount_line_seperator_pieces[1])
 							);
 
 						} else {
 
 							$parsed_discount_data[] = array(
-							'quantity_min' => intval( $quantity_min ),
-							'quantity_max' => intval( $quantity_max ),
-							'discount'     => floatval( $discount_line_seperator_pieces[1])
+								'quantity_min' => intval( $quantity_min ),
+								'quantity_max' => intval( $quantity_max ),
+								'discount'     => floatval( $discount_line_seperator_pieces[1])
 							);
 						}
 

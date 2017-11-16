@@ -12,7 +12,7 @@
 				return bundle_price_data;
 			}
 
-			var	quantities     = bundle_price_data.quantities,
+			var quantities     = bundle_price_data.quantities,
 				discount_data  = bundle_price_data.bulk_discount_data.discount_array,
 				discount       = 0,
 				total_quantity = 0;
