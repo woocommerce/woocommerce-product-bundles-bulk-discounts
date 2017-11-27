@@ -12,6 +12,10 @@
 				return bundle_price_data;
 			}
 
+			if ( typeof bundle_price_data.bulk_discount_data === 'undefined' ) {
+				return bundle_price_data;
+			}
+
 			var quantities     = bundle_price_data.quantities,
 				discount_data  = bundle_price_data.bulk_discount_data.discount_array,
 				discount       = 0,
@@ -80,6 +84,10 @@
 		 * 'bundle_total_price_html' filter callback.
 		 */
 		this.filter_bundle_total_price_html = function( price_html, bundle ) {
+
+			if ( typeof bundle.price_data.bulk_discount_data === 'undefined' ) {
+				return price_html;
+			}
 
 			if ( bundle.price_data.bulk_discount_data.discount && bundle.price_data.subtotals.price !== bundle.price_data.totals.price ) {
 
