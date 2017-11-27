@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Bulk Discounts ***
 
+2017.11.27 - version 1.0.2
+* Fix - JS error when viewing bundles with empty discount data.
+
 2017.11.16 - version 1.0.1
 * Tweak - "Bulk discounts" admin option tooltip.
 

@@ -2,9 +2,9 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Product Bundles - Bulk Discounts 1.0.1\n"
+"Project-Id-Version: WooCommerce Product Bundles - Bulk Discounts 1.0.2\n"
 "Report-Msgid-Bugs-To: support@somewherewarm.gr\n"
-"POT-Creation-Date: 2017-11-16 11:59:22+00:00\n"
+"POT-Creation-Date: 2017-11-27 07:36:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
