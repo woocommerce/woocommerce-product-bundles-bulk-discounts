@@ -1,5 +1,8 @@
 *** WooCommerce Product Bundles - Bulk Discounts ***
 
+2017.12.27 - version 1.0.3
+* Fix - Client-side totals calculation incorrect when discount amount resets to 0 after a quantity threshold.
+
 2017.11.27 - version 1.0.2
 * Fix - JS error when viewing bundles with empty discount data.
 

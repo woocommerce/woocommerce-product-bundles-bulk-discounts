@@ -74,6 +74,14 @@
 						}
 
 					} );
+
+				} else {
+
+					bundle_price_data.base_price_totals = bundle_price_data.base_price_subtotals;
+
+					$.each( bundle.bundled_items, function( index, bundled_item ) {
+						bundle_price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_totals' ] = bundle_price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_subtotals' ];
+					} );
 				}
 			}
 
