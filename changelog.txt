@@ -1,7 +1,10 @@
 *** WooCommerce Product Bundles - Bulk Discounts ***
 
-2017.02.02 - version 1.0.4
-* Fix - Declare WooCommerce 3.3 compatibility.
+2018.09.25 - version 1.0.5
+* Tweak - Declare WooCommerce 3.5 compatibility.
+
+2018.02.02 - version 1.0.4
+* Tweak - Declare WooCommerce 3.3 compatibility.
 
 2017.12.27 - version 1.0.3
 * Fix - Client-side totals calculation incorrect when discount amount resets to 0 after a quantity threshold.
