@@ -380,7 +380,7 @@ class WC_PB_Bulk_Discounts {
 			'id'            => '_wc_pb_quantity_discount_data',
 			'wrapper_class' => 'bundled_product_data_field',
 			'value'         => $discount_data_string,
-			'label'         => __( 'Bulk discounts', 'woocommerce-product-bundles-bulk-discounts' ),
+			'label'         => __( 'Bulk Discounts', 'woocommerce-product-bundles-bulk-discounts' ),
 			'description'   => __( 'Define bulk discounts by adding one discount rule per line in either: i) quantity range format, e.g. <strong>1 - 5 | 5</strong>, ii) single quantity format, e.g. <strong>6 | 10</strong>, or iii) "equal to or higher" format, e.g. <strong>7+ | 15</strong>.<br>Note: Discount amounts are expressed in % only.', 'woocommerce-product-bundles-bulk-discounts' ),
 			'rows'          => 3,
 			'desc_tip'      => true
