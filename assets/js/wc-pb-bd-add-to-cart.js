@@ -102,8 +102,10 @@
 				var price_html_subtotals = '',
 					price_data_subtotals = $.extend( true, {}, bundle.price_data );
 
-				price_data_subtotals.totals = price_data_subtotals.subtotals;
-				price_html_subtotals        = bundle.get_price_html( price_data_subtotals );
+				price_data_subtotals.totals            = price_data_subtotals.subtotals;
+				price_data_subtotals.show_total_string = 'yes';
+
+				price_html_subtotals = bundle.get_price_html( price_data_subtotals );
 
 				var discount_string        = '<span class="discount">' + wc_bundle_params.i18n_bulk_discount + '</span>',
 					discount_value         = '<span class="discount-amount">' + wc_bundle_params.i18n_bulk_discount_value.replace( '%v', wc_pb_number_round( bundle.price_data.bulk_discount_data.discount, 2 ) ) + '</span>',
