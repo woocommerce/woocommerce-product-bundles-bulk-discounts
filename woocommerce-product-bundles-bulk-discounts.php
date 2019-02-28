@@ -506,14 +506,22 @@ class WC_PB_Bulk_Discounts {
 				$total_min_quantity = 0;
 				$discount_applies   = false;
 				$bundled_items      = $product->get_bundled_items();
+				$min_meta           = $product->get_meta( '_wcpb_min_qty_limit', true );
 
-				foreach ( $bundled_items as $value ) {
-					$total_min_quantity += $value->get_quantity( 'min' );
+				// Check if Min/Max Items rules exist.
+				if ( ! empty( $min_meta ) ) {
+					$total_min_quantity = absint( $min_meta );
+				} else {
+					foreach ( $bundled_items as $bundled_item ) {
+
+						// Do not add optional bundled items quantity.
+						$total_min_quantity += $bundled_item->get_quantity( 'min', array( 'check_optional' => true ) );
+					}
 				}
-
-				// Check if the sum of min_quantity exists in a disount line.
+				
+				// Check if the sum of min_quantity exists in a disount line. 
 				foreach ( $discount_data_array as $line ) {
-					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] ) {
+					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] && $line[ 'discount' ] > 0 ) {
 						$discount_applies = true;
 					}
 				}
