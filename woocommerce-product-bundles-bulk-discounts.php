@@ -506,14 +506,19 @@ class WC_PB_Bulk_Discounts {
 				$total_min_quantity = 0;
 				$discount_applies   = false;
 				$bundled_items      = $product->get_bundled_items();
+				
+				// Calculate minimum possible bundled items quantity.
+				foreach ( $bundled_items as $bundled_item ) {
 
-				foreach ( $bundled_items as $value ) {
-					$total_min_quantity += $value->get_quantity( 'min' );
+					$total_min_quantity += $bundled_item->get_quantity( 'min', array( 
+						'context'        => 'price',
+						'check_optional' => true 
+					) );
 				}
 
-				// Check if the sum of min_quantity exists in a disount line.
+				// Check if the sum of min_quantity exists in a disount line. 
 				foreach ( $discount_data_array as $line ) {
-					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] ) {
+					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] && $line[ 'discount' ] > 0 ) {
 						$discount_applies = true;
 					}
 				}
