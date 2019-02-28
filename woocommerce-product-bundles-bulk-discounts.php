@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Bulk Discounts
 * Plugin URI: http://woocommerce.com/products/product-bundles
 * Description: Bulk discounts for WooCommerce Product Bundles.
-* Version: 1.0.5
+* Version: 1.0.6-dev
 * Author: SomewhereWarm
 * Author URI: http://somewherewarm.gr/
 *
@@ -11,12 +11,12 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.4
-* Tested up to: 4.9
+* Tested up to: 5.1
 *
 * WC requires at least: 3.0
 * WC tested up to: 3.5
 *
-* Copyright: © 2018 SomewhereWarm SMPC.
+* Copyright: © 2017-2019 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.0.5';
+	public static $version = '1.0.6-dev';
 
 	/**
 	 * Min required PB version.
@@ -506,17 +506,17 @@ class WC_PB_Bulk_Discounts {
 				$total_min_quantity = 0;
 				$discount_applies   = false;
 				$bundled_items      = $product->get_bundled_items();
-				
+
 				// Calculate minimum possible bundled items quantity.
 				foreach ( $bundled_items as $bundled_item ) {
 
-					$total_min_quantity += $bundled_item->get_quantity( 'min', array( 
+					$total_min_quantity += $bundled_item->get_quantity( 'min', array(
 						'context'        => 'price',
-						'check_optional' => true 
+						'check_optional' => true
 					) );
 				}
 
-				// Check if the sum of min_quantity exists in a disount line. 
+				// Check if the sum of min_quantity exists in a disount line.
 				foreach ( $discount_data_array as $line ) {
 					if ( isset( $line[ 'quantity_min' ] ) && $total_min_quantity >= $line[ 'quantity_min' ] && $line[ 'discount' ] > 0 ) {
 						$discount_applies = true;
