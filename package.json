@@ -6,7 +6,7 @@
 		"url": "https://github.com/somewherewarm/woocommerce-product-bundles-bulk-discounts.git"
 	},
 	"license": "GPL-3.0+",
-	"version": "1.0.0",
+	"version": "1.0.6",
 	"homepage": "http://woocommerce.com/products/product-bundles/",
 	"main": "Gruntfile.js",
 	"devDependencies": {
