@@ -1,6 +1,9 @@
 *** WooCommerce Product Bundles - Bulk Discounts ***
 
-2019.xx.xx - version 1.0.6
+2019.xx.xx - version 1.1.0
+* Fix - Added support for Product Bundles 5.10+.
+
+2019.03.06 - version 1.0.6
 * Fix - Updated Bundled items minimum quantity calculation.
 
 2018.09.25 - version 1.0.5
