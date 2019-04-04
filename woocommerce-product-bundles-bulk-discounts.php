@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.1.0-dev';
+	public static $version = '1.1.0';
 
 	/**
 	 * Min required PB version.

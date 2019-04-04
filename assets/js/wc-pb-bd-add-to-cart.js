@@ -8,8 +8,8 @@
 		 */
 		this.filter_bundle_totals = function( totals, bundle_price_data, bundle, qty ) {
 
-			if ( typeof bundle_price_data.bulk_discount_data === 'undefined' ) {
-				return bundle_price_data;
+			if ( typeof bundle_price_data.bulk_discount_data === 'undefined' || false === bundle_price_data.bulk_discount_data ) {
+				return totals;
 			}
 
 			var quantities     = bundle_price_data.quantities,
@@ -33,9 +33,9 @@
 					}
 				}
 
-				if ( discount > 0 ) {
+				bundle.price_data.bulk_discount_data.discount = discount;
 
-					bundle.price_data.bulk_discount_data.discount = discount;
+				if ( discount > 0 ) {
 
 					var price_data = $.extend( true, {}, bundle_price_data );
 
@@ -47,6 +47,9 @@
 					if ( 'yes' === bundle.price_data.bulk_discount_data.discount_base && price_data.base_price ) {
 						price_data.base_price = Number( price_data.base_price ) * ( 1 - discount / 100 );
 					}
+
+					// Prevent infinite loop.
+					price_data.bulk_discount_data = false;
 
 					price_data = bundle.calculate_subtotals( false, price_data, qty );
 					price_data = bundle.calculate_totals( price_data );
