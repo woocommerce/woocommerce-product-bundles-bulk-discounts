@@ -36,4 +36,4 @@ To discount static/base bundle prices, use the following snippet:
 
 ### Important
 
-Requires WooCommerce Product Bundles 5.6+.
+Requires WooCommerce Product Bundles 5.10+.
