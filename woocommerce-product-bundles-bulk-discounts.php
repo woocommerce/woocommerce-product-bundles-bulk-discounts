@@ -26,7 +26,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 class WC_PB_Bulk_Discounts {
 
 	/**

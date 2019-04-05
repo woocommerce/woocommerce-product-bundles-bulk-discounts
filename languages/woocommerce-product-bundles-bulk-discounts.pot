@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Product Bundles - Bulk Discounts 1.1.0-dev\n"
 "Report-Msgid-Bugs-To: support@somewherewarm.gr\n"
-"POT-Creation-Date: 2019-04-05 10:54:34+00:00\n"
+"POT-Creation-Date: 2019-04-05 11:01:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,33 +13,33 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: woocommerce-product-bundles-bulk-discounts.php:223
-#: woocommerce-product-bundles-bulk-discounts.php:236
-#: woocommerce-product-bundles-bulk-discounts.php:328
+#: woocommerce-product-bundles-bulk-discounts.php:222
+#: woocommerce-product-bundles-bulk-discounts.php:235
+#: woocommerce-product-bundles-bulk-discounts.php:327
 msgid "Line <strong> %s </strong> not saved. Invalid format."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:270
-#: woocommerce-product-bundles-bulk-discounts.php:279
-#: woocommerce-product-bundles-bulk-discounts.php:287
+#: woocommerce-product-bundles-bulk-discounts.php:269
+#: woocommerce-product-bundles-bulk-discounts.php:278
+#: woocommerce-product-bundles-bulk-discounts.php:286
 msgid "Line <strong> %s </strong> not saved. Overlapping data."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:299
+#: woocommerce-product-bundles-bulk-discounts.php:298
 msgid "Line <strong> %s </strong> not saved. Invalid discount."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:366
+#: woocommerce-product-bundles-bulk-discounts.php:365
 msgid ""
 "<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> "
 "requires Product Bundles <strong>%s</strong> or higher."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:383
+#: woocommerce-product-bundles-bulk-discounts.php:382
 msgid "Bulk Discounts"
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:384
+#: woocommerce-product-bundles-bulk-discounts.php:383
 msgid ""
 "Define bulk discounts by adding one discount rule per line in either: i) "
 "quantity range format, e.g. <strong>1 - 5 | 5</strong>, ii) single quantity "
@@ -48,19 +48,19 @@ msgid ""
 "expressed in % only."
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:638
+#: woocommerce-product-bundles-bulk-discounts.php:637
 msgid "%s <small>(before discount)</small>"
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:708
+#: woocommerce-product-bundles-bulk-discounts.php:707
 msgid "Subtotal: "
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:709
+#: woocommerce-product-bundles-bulk-discounts.php:708
 msgid "Discount: "
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:710
+#: woocommerce-product-bundles-bulk-discounts.php:709
 msgid "%s%%"
 msgstr ""
 
@@ -84,7 +84,7 @@ msgstr ""
 msgid "http://somewherewarm.gr/"
 msgstr ""
 
-#: woocommerce-product-bundles-bulk-discounts.php:711
+#: woocommerce-product-bundles-bulk-discounts.php:710
 msgctxt "\"Discount\" string followed by value"
 msgid "%1$s%2$s"
 msgstr ""
