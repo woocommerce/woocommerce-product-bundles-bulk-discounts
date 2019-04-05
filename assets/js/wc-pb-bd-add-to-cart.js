@@ -6,14 +6,10 @@
 		/**
 		 * 'bundle_subtotals_data' filter callback.
 		 */
-		this.filter_bundle_subtotals_data = function( bundle_price_data, bundle, qty ) {
+		this.filter_bundle_totals = function( totals, bundle_price_data, bundle, qty ) {
 
-			if ( bundle_price_data.applied_discount ) {
-				return bundle_price_data;
-			}
-
-			if ( typeof bundle_price_data.bulk_discount_data === 'undefined' ) {
-				return bundle_price_data;
+			if ( typeof bundle_price_data.bulk_discount_data === 'undefined' || false === bundle_price_data.bulk_discount_data ) {
+				return totals;
 			}
 
 			var quantities     = bundle_price_data.quantities,
@@ -37,7 +33,7 @@
 					}
 				}
 
-				bundle_price_data.bulk_discount_data.discount = discount;
+				bundle.price_data.bulk_discount_data.discount = discount;
 
 				if ( discount > 0 ) {
 
@@ -52,40 +48,17 @@
 						price_data.base_price = Number( price_data.base_price ) * ( 1 - discount / 100 );
 					}
 
-					price_data.applied_discount = true;
+					// Prevent infinite loop.
+					price_data.bulk_discount_data = false;
 
 					price_data = bundle.calculate_subtotals( false, price_data, qty );
 					price_data = bundle.calculate_totals( price_data );
 
-					price_data.applied_discount = false;
-
-					/*
-					 * Modify the totals.
-					 */
-
-					bundle_price_data.base_price_totals = price_data.base_price_totals;
-
-					$.each( bundle.bundled_items, function( index, bundled_item ) {
-
-						var bundled_item_totals = price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_totals' ];
-
-						if ( typeof bundled_item_totals !== 'undefined' ) {
-							bundle_price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_totals' ] = bundled_item_totals;
-						}
-
-					} );
-
-				} else {
-
-					bundle_price_data.base_price_totals = bundle_price_data.base_price_subtotals;
-
-					$.each( bundle.bundled_items, function( index, bundled_item ) {
-						bundle_price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_totals' ] = bundle_price_data[ 'bundled_item_' + bundled_item.bundled_item_id + '_subtotals' ];
-					} );
+					totals = price_data.totals;
 				}
 			}
 
-			return bundle_price_data;
+			return totals;
 		};
 
 		/**
@@ -101,6 +74,18 @@
 
 				var price_html_subtotals = '',
 					price_data_subtotals = $.extend( true, {}, bundle.price_data );
+
+				/*
+				 * Recalculate price html to strikeout the subtotals' price.
+				 */
+
+				price_data_subtotals.totals.regular_price = price_data_subtotals.subtotals.price;
+
+				price_html = bundle.get_price_html( price_data_subtotals );
+
+				/*
+				 * Now generate the initial price html again.
+				 */
 
 				price_data_subtotals.totals            = price_data_subtotals.subtotals;
 				price_data_subtotals.show_total_string = 'yes';
@@ -133,9 +118,9 @@
 		this.initialize = function() {
 
 			/**
-			 * Filter totals using 'bundle_subtotals_data' JS filter.
+			 * Filter totals using 'totals' JS filter.
 			 */
-			bundle.filters.add_filter( 'bundle_subtotals_data', this.filter_bundle_subtotals_data, 10, this );
+			bundle.filters.add_filter( 'bundle_totals', this.filter_bundle_totals, 10, this );
 
 			/**
 			 * Filter price total html using 'bundle_total_price_html' JS filter.
@@ -145,11 +130,22 @@
 	};
 
 	// Hook into Bundles.
-	$( '.bundle_form .bundle_data' ).each( function() {
-		$( this ).on( 'woocommerce-product-bundle-initializing', function( event, bundle ) {
+	$( '.bundle_form .bundle_data' ).on( 'woocommerce-product-bundle-initializing', function( event, bundle ) {
+		var pb_integration = new PB_Integration( bundle );
+		pb_integration.initialize();
+
+	} );
+
+	// Hook into Bundles loaded by Composites.
+	$( '.composite_component' ).on( 'wc-composite-component-loaded', function( event, step ) {
+
+		if ( 'bundle' === step.get_selected_product_type() ) {
+
+			bundle = step.get_bundle_script();
+
 			var pb_integration = new PB_Integration( bundle );
 			pb_integration.initialize();
-		} );
+		}
 	} );
 
 } ) ( jQuery );
