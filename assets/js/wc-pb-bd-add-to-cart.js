@@ -130,11 +130,22 @@
 	};
 
 	// Hook into Bundles.
-	$( '.bundle_form .bundle_data' ).each( function() {
-		$( this ).on( 'woocommerce-product-bundle-initializing', function( event, bundle ) {
+	$( '.bundle_form .bundle_data' ).on( 'woocommerce-product-bundle-initializing', function( event, bundle ) {
+		var pb_integration = new PB_Integration( bundle );
+		pb_integration.initialize();
+
+	} );
+
+	// Hook into Bundles loaded by Composites.
+	$( '.composite_component' ).on( 'wc-composite-component-loaded', function( event, step ) {
+
+		if ( 'bundle' === step.get_selected_product_type() ) {
+
+			bundle = step.get_bundle_script();
+
 			var pb_integration = new PB_Integration( bundle );
 			pb_integration.initialize();
-		} );
+		}
 	} );
 
 } ) ( jQuery );
