@@ -1,11 +1,11 @@
 <?php
-/*
+/**
 * Plugin Name: WooCommerce Product Bundles - Bulk Discounts
 * Plugin URI: http://woocommerce.com/products/product-bundles
 * Description: Bulk discounts for WooCommerce Product Bundles.
-* Version: 1.1.0-dev
+* Version: 1.1.0
 * Author: SomewhereWarm
-* Author URI: http://somewherewarm.gr/
+* Author URI: https://somewherewarm.gr/
 *
 * Text Domain: woocommerce-product-bundles-bulk-discounts
 * Domain Path: /languages/
@@ -13,7 +13,7 @@
 * Requires at least: 4.4
 * Tested up to: 5.1
 *
-* WC requires at least: 3.0
+* WC requires at least: 3.1
 * WC tested up to: 3.6
 *
 * Copyright: © 2017-2019 SomewhereWarm SMPC.
