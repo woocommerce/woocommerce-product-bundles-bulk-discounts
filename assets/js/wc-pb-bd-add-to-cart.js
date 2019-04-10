@@ -141,9 +141,9 @@
 
 		if ( 'bundle' === step.get_selected_product_type() ) {
 
-			bundle = step.get_bundle_script();
+			var bundle = step.get_bundle_script(),
+				pb_integration = new PB_Integration( bundle );
 
-			var pb_integration = new PB_Integration( bundle );
 			pb_integration.initialize();
 		}
 	} );
