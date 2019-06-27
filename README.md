@@ -2,7 +2,7 @@
 
 ### What's This?
 
-Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) that allows you offer bulk discounts in Product Bundles by associating bundled product quantities with discount values.
+Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) that allows you to offer bulk discounts in Product Bundles by associating bundled product quantities with discount values.
 
 ### Adding Bulk Discounts
 
