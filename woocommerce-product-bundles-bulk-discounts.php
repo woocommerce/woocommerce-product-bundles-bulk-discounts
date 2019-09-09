@@ -439,7 +439,7 @@ class WC_PB_Bulk_Discounts {
 
 				$discounted_price = self::calculate_discount( $price, $total_quantity, $discount_data_array );
 				$cart_item[ 'data' ]->set_price( $discounted_price );
-
+				$cart_item[ 'data' ]->set_sale_price( $discounted_price );
 			}
 		}
 
@@ -473,6 +473,7 @@ class WC_PB_Bulk_Discounts {
 
 				$discounted_price = self::calculate_discount( $price, $total_quantity, $discount_data_array );
 				$cart_item[ 'data' ]->set_price( $discounted_price );
+				$cart_item[ 'data' ]->set_sale_price( $discounted_price );
 			}
 		}
 
