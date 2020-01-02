@@ -112,8 +112,15 @@ class WC_PB_Bulk_Discounts {
 		// Apply discount to bundle container cart items.
 		add_filter( 'woocommerce_bundle_container_cart_item', array( __CLASS__, 'bundle_container_cart_item_discount' ), 10, 2 );
 
-		// Calculate discounted price.
-		add_filter( 'woocommerce_bundled_item_discount', array( __CLASS__, 'filter_bundled_item_discount' ), 20, 3 );
+		if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
+
+			// Calculate bundled item bulk discounted price.
+			add_filter( 'woocommerce_bundled_item_discount', array( __CLASS__, 'filter_bundled_item_discount' ), 100, 3 );
+
+			// Calculate container item bulk discounted price.
+			add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'filter_get_price_cart' ), 100, 2 );
+			add_filter( 'woocommerce_product_get_sale_price', array( __CLASS__, 'filter_get_price_cart' ), 100, 2 );
+		}
 
 		/*
 		 * Products / Catalog.
@@ -497,7 +504,12 @@ class WC_PB_Bulk_Discounts {
 				}
 
 				if ( $discount = self::get_discount( $total_quantity, $discount_data_array ) ) {
-					$cart_item[ 'data' ]->set_price( self::get_discounted_price( $price, $discount ) );
+
+					if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
+						$cart_item[ 'data' ]->bundle_bulk_discount = $discount;
+					} else {
+						$cart_item[ 'data' ]->set_price( self::get_discounted_price( $price, $discount ) );
+					}
 				}
 			}
 		}
@@ -661,6 +673,35 @@ class WC_PB_Bulk_Discounts {
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Filter get_price() calls to include container discounts.
+	 *
+	 * @since  1.2.0
+	 *
+	 * @param  double      $price
+	 * @param  WC_Product  $product
+	 * @param  string      $context
+	 * @return double
+	 */
+	public static function filter_get_price_cart( $price, $product, $context = '' ) {
+
+		$discount = false;
+
+		if ( isset( $product->bundle_bulk_discount ) ) {
+			$discount = $product->bundle_bulk_discount;
+		}
+
+		if ( ! $discount ) {
+			return $price;
+		}
+
+		if ( ! $price ) {
+			return $price;
+		}
+
+		return self::get_discounted_price( $price, $discount );
 	}
 
 	/**
