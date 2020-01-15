@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Bulk Discounts
 * Plugin URI: http://woocommerce.com/products/product-bundles
 * Description: Bulk discounts for WooCommerce Product Bundles.
-* Version: 1.1.0
+* Version: 1.2.0-dev
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.gr/
 *
@@ -11,10 +11,10 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.4
-* Tested up to: 5.1
+* Tested up to: 5.3
 *
 * WC requires at least: 3.1
-* WC tested up to: 3.6
+* WC tested up to: 3.9
 *
 * Copyright: © 2017-2019 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
@@ -33,14 +33,14 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.1.0';
+	public static $version = '1.2.0-dev';
 
 	/**
 	 * Min required PB version.
 	 *
 	 * @var string
 	 */
-	public static $req_pb_version = '5.10';
+	public static $req_pb_version = '6.0';
 
 	/**
 	 * Discount data array for access via filter callbacks -- internal use only.
@@ -112,6 +112,16 @@ class WC_PB_Bulk_Discounts {
 		// Apply discount to bundle container cart items.
 		add_filter( 'woocommerce_bundle_container_cart_item', array( __CLASS__, 'bundle_container_cart_item_discount' ), 10, 2 );
 
+		if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
+
+			// Calculate bundled item bulk discounted price.
+			add_filter( 'woocommerce_bundled_item_discount', array( __CLASS__, 'filter_bundled_item_discount' ), 100, 3 );
+
+			// Calculate container item bulk discounted price.
+			add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'filter_get_price_cart' ), 100, 2 );
+			add_filter( 'woocommerce_product_get_sale_price', array( __CLASS__, 'filter_get_price_cart' ), 100, 2 );
+		}
+
 		/*
 		 * Products / Catalog.
 		 */
@@ -143,12 +153,13 @@ class WC_PB_Bulk_Discounts {
 	/**
 	 * Calculates a discounted price based on quantity and a discount data array.
 	 *
-	 * @param  mixed    $price
 	 * @param  integer  $total_quantity
 	 * @param  array    $discount_data_array
-	 * @return mixed    $price
+	 * @return mixed
 	 */
-	public static function calculate_discount( $price, $total_quantity, $discount_data_array ) {
+	public static function get_discount( $total_quantity, $discount_data_array ) {
+
+		$discount = 0.0;
 
 		foreach ( $discount_data_array as $lines ) {
 
@@ -156,16 +167,26 @@ class WC_PB_Bulk_Discounts {
 
 				$quantity_min = $lines[ 'quantity_min' ];
 				$quantity_max = $lines[ 'quantity_max' ];
-				$discount     = $lines[ 'discount' ];
 
 				if ( $total_quantity >= $quantity_min && $total_quantity <= $quantity_max ) {
-					$price = (double) ( ( 100 - $discount ) * $price ) / 100 ;
+					$discount = $lines[ 'discount' ];
 					break;
 				}
 			}
 		}
 
-		return $price;
+		return $discount;
+	}
+
+	/**
+	 * Calculates a discounted price based on quantity and a discount data array.
+	 *
+	 * @param  mixed  $price
+	 * @param  float  $discount
+	 * @return mixed
+	 */
+	public static function get_discounted_price( $price, $discount ) {
+		return $discount ? (double) ( ( 100 - $discount ) * $price ) / 100 : $price;
 	}
 
 	/**
@@ -437,9 +458,20 @@ class WC_PB_Bulk_Discounts {
 					}
 				}
 
-				$discounted_price = self::calculate_discount( $price, $total_quantity, $discount_data_array );
-				$cart_item[ 'data' ]->set_price( $discounted_price );
+				if ( $discount = self::get_discount( $total_quantity, $discount_data_array ) ) {
 
+					if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
+
+						// Store a unique copy of the bundled item to avoid caching issues -- see 'WC_Product_Bundle::get_bundled_item'.
+						$cart_item[ 'data' ]->bundled_cart_item                = $container[ 'data' ]->get_bundled_item( $cart_item[ 'bundled_item_id' ], 'view', array( 'configuration' => $bundled_items_data ) );
+						$cart_item[ 'data' ]->bundled_cart_item->bulk_discount = $discount;
+
+					} else {
+
+						$discounted_price = self::get_discounted_price( $price, $discount );
+						$cart_item[ 'data' ]->set_price( $discounted_price );
+					}
+				}
 			}
 		}
 
@@ -471,8 +503,14 @@ class WC_PB_Bulk_Discounts {
 					}
 				}
 
-				$discounted_price = self::calculate_discount( $price, $total_quantity, $discount_data_array );
-				$cart_item[ 'data' ]->set_price( $discounted_price );
+				if ( $discount = self::get_discount( $total_quantity, $discount_data_array ) ) {
+
+					if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
+						$cart_item[ 'data' ]->bundle_bulk_discount = $discount;
+					} else {
+						$cart_item[ 'data' ]->set_price( self::get_discounted_price( $price, $discount ) );
+					}
+				}
 			}
 		}
 
@@ -554,9 +592,9 @@ class WC_PB_Bulk_Discounts {
 	 * @return void
 	 */
 	public static function add_filters() {
-		add_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
-		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
-		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+		add_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'filter_bundle_prices_hash' ), 10, 2 );
+		add_filter( 'woocommerce_product_get_price', array( __CLASS__, 'filter_price' ), 16, 2 );
+		add_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'filter_price' ), 16, 2 );
 	}
 
 	/**
@@ -565,18 +603,46 @@ class WC_PB_Bulk_Discounts {
 	 * @return void
 	 */
 	public static function remove_filters() {
-		remove_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'add_discounted_prices_hash' ), 10, 2 );
-		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
-		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'get_discounted_price' ), 16, 2 );
+		remove_filter( 'woocommerce_bundle_prices_hash', array( __CLASS__, 'filter_bundle_prices_hash' ), 10, 2 );
+		remove_filter( 'woocommerce_product_get_price', array( __CLASS__, 'filter_price' ), 16, 2 );
+		remove_filter( 'woocommerce_product_variation_get_price', array( __CLASS__, 'filter_price' ), 16, 2 );
+	}
+
+	/**
+	 * Aggregate bulk discount into bundled item discount.
+	 *
+	 * @since  1.2.0
+	 *
+	 * @param  float            $discount
+	 * @param  WC_Bundled_Item  $bundled_item
+	 * @param  string           $context
+	 * @return float
+	 */
+	public static function filter_bundled_item_discount( $discount, $bundled_item, $context ) {
+
+		if ( 'cart' !== $context ) {
+			return $discount;
+		}
+
+		if ( empty( $bundled_item->bulk_discount ) ) {
+			return $discount;
+		}
+
+		$discount      = (float) $discount;
+		$bulk_discount = (float) $bundled_item->bulk_discount;
+		$discount      = $bulk_discount + $discount - ( $discount * $bulk_discount ) / 100;
+
+		return $discount;
 	}
 
 	/**
 	 * Modify bundle prices hash to go around the runtime cache.
 	 *
-	 * @param array              $hash
-	 * @param WC_Product_Bundle  $bundle
+	 * @param   array              $hash
+	 * @param   WC_Product_Bundle  $bundle
+	 * @return array
 	 */
-	public static function add_discounted_prices_hash( $hash, $bundle ) {
+	public static function filter_bundle_prices_hash( $hash, $bundle ) {
 		$hash[] = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
 		return $hash;
 	}
@@ -586,9 +652,9 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @param  mixed   $price
 	 * @param  object  $product
-	 * @return mixed   $price
+	 * @return mixed
 	 */
-	public static function get_discounted_price( $price, $product ) {
+	public static function filter_price( $price, $product ) {
 
 		$calculate_discount = true;
 
@@ -598,12 +664,44 @@ class WC_PB_Bulk_Discounts {
 		}
 
 		if ( $calculate_discount ) {
-			$total_quantity = self::$total_min_quantity;
-			$price          = self::calculate_discount( $price, $total_quantity, self::$discount_data_array );
 
+			$total_quantity = self::$total_min_quantity;
+
+			if ( $discount = self::get_discount( $total_quantity, self::$discount_data_array ) ) {
+				$price = self::get_discounted_price( $price, $discount );
+			}
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Filter get_price() calls to include container discounts.
+	 *
+	 * @since  1.2.0
+	 *
+	 * @param  double      $price
+	 * @param  WC_Product  $product
+	 * @param  string      $context
+	 * @return double
+	 */
+	public static function filter_get_price_cart( $price, $product, $context = '' ) {
+
+		$discount = false;
+
+		if ( isset( $product->bundle_bulk_discount ) ) {
+			$discount = $product->bundle_bulk_discount;
+		}
+
+		if ( ! $discount ) {
+			return $price;
+		}
+
+		if ( ! $price ) {
+			return $price;
+		}
+
+		return self::get_discounted_price( $price, $discount );
 	}
 
 	/**
