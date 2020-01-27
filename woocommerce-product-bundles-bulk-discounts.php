@@ -3,7 +3,7 @@
 * Plugin Name: WooCommerce Product Bundles - Bulk Discounts
 * Plugin URI: http://woocommerce.com/products/product-bundles
 * Description: Bulk discounts for WooCommerce Product Bundles.
-* Version: 1.2.0-dev
+* Version: 1.2.0
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.gr/
 *
@@ -33,7 +33,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.2.0-dev';
+	public static $version = '1.2.0';
 
 	/**
 	 * Min required PB version.
