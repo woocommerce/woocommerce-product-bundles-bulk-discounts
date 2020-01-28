@@ -1,9 +1,9 @@
 <?php
 /**
-* Plugin Name: WooCommerce Product Bundles - Bulk Discounts
-* Plugin URI: http://woocommerce.com/products/product-bundles
-* Description: Bulk discounts for WooCommerce Product Bundles.
-* Version: 1.2.0
+* Plugin Name: Product Bundles - Bulk Discounts for WooCommerce
+* Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
+* Description: Bulk quantity discounts for WooCommerce Product Bundles.
+* Version: 1.3.0
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.gr/
 *
@@ -16,7 +16,7 @@
 * WC requires at least: 3.1
 * WC tested up to: 3.9
 *
-* Copyright: © 2017-2019 SomewhereWarm SMPC.
+* Copyright: © 2017-2020 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -33,7 +33,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.2.0';
+	public static $version = '1.3.0';
 
 	/**
 	 * Min required PB version.
@@ -383,7 +383,7 @@ class WC_PB_Bulk_Discounts {
 	 * PB version check notice.
 	 */
 	public static function version_notice() {
-		echo '<div class="error"><p>' . sprintf( __( '<strong>WooCommerce Product Bundles &ndash; Bulk Discounts</strong> requires Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Bulk Discounts</strong> requires WooCommerce Product Bundles <strong>%s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
