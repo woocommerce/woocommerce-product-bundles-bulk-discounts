@@ -2,9 +2,9 @@
 
 ### What's This?
 
-Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) that allows you to offer bulk quantity discounts in Product Bundles by associating bundled product quantities with discount tiers.
+Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) that allows you to create dynamic pricing rules and offer bulk quantity discounts.
 
-### Adding Bulk Discounts
+### How It Works
 
 To add bulk discounts to a Product Bundle, navigate to **Product Data > Bundled Products** and locate the **Bulk discounts** field. Add one discount rule per line using:
 
@@ -13,8 +13,6 @@ To add bulk discounts to a Product Bundle, navigate to **Product Data > Bundled 
 * "equal to or higher" format - e.g. **7+ | 15**
 
 <img width="804" alt="Adding bulk discount rules." src="https://user-images.githubusercontent.com/1783726/32772873-fecc3c3e-c92f-11e7-96a5-a3626589ea12.png">
-
-### Bulk Discounts in Product Bundles
 
 When a Product Bundle with bulk discounts is configured, the price total that's normally displayed above the add-to-cart button changes slightly to include some extra information:
 
