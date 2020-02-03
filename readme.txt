@@ -1,7 +1,7 @@
 === Product Bundles - Bulk Discounts for WooCommerce ===
 
 Contributors: franticpsyx, SomewhereWarm
-Tags: woocommerce, product, bundles, products, bulk, quantity, discount, tiers, rules, dynamic, pricing, dynamic, prices
+Tags: woocommerce, product, bundles, dynamic, pricing, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
@@ -14,22 +14,18 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 Free mini-extension for WooCommerce Product Bundles that allows you to create dynamic pricing rules and offer bulk quantity discounts.
 
 
-== Installation ==
-
-This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
-
-
 == Description ==
 
-Free mini-extension for the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Allows you to offer progressively higher discounts when customers purchase more items in a Product Bundle.
+Free mini-extension for the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension that allows you to create [dynamic pricing](https://docs.woocommerce.com/document/bundles/bundles-use-case-sell-in-bulk/) rules. Use it to offer higher discounts when customers purchase more items in a Product Bundle.
 
 Compared to rule-based or coupon-based approaches, Product Bundles with dynamic pricing rules are:
 
 * Easier to discover. Each Product Bundle is an individual WooCommerce product with its own page in your catalog.
-* Easier to set up. Rule-based discount plugins are harder to set up and require a higher up-front investment.
-* Trackable. You can use WooCommerce product revenue reports to find out how your bundles are performing.
+* Easier to set up. Rule-based discount plugins are more complicated and usually require a higher up-front investment.
 
-Developers may checkout and contribute to the plugin at its [GitHub Repository](https://github.com/somewherewarm/woocommerce-product-bundles-bulk-discounts).
+Additionally, WooCommerce product revenue reports make it easier for you to track the performance of bundles with bulk discount rules.
+
+**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Documentation ==
@@ -67,6 +63,13 @@ This means that:
 * If 10 or more items are chosen, the discount goes up to 15%.
 
 When a Product Bundle with bulk discounts is configured, the applicable discount and total is dynamically calculated and displayed.
+
+Want to contribute? Please submit issue reports and pull requests on [GitHub](https://github.com/somewherewarm/woocommerce-product-bundles-bulk-discounts).
+
+
+== Installation ==
+
+This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Screenshots ==
