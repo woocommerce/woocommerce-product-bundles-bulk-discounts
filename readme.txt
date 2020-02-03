@@ -50,11 +50,11 @@ Quantities can be entered in either:
 
 Here's a ruleset:
 
-```
+`
 4 - 5 | 5
 6 - 9 | 10
 10 + | 15
-```
+`
 
 This means that:
 
