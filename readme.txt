@@ -80,71 +80,44 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
-= 1.4.0 =
-* Important - Renamed plugin to comply with WordPress.org guidelines.
-
-= 1.3.6 =
-* Tweak - Declared support for WP 5.3 and WooCommerce 3.9.
-
-= 1.3.5 =
-* Tweak - Updated supported WP/WC versions.
-
-= 1.3.4 =
-* Tweak - Removed admin options wrapper div.
-
-= 1.3.3 =
-* Tweak - Declare WC 3.5 support.
-
-= 1.3.2 =
-* Tweak - Fixed an incorrect gettext string in validation messages.
-* Tweak - Added WC 3.3 support.
-
 = 1.3.1 =
-* Tweak - Updated plugin headers.
-* Tweak - Renamed 'Bundled Products' tab option labels.
+* Fix - Declared compatibility with WooCommerce 4.0.
+* Fix - Initialized plugin text domain.
+* Fix - Moved correct changelog from v1.2.
 
 = 1.3.0 =
-* Fix - Cart validation.
-* Tweak - Re-designed validation messages.
-* Tweak - Updated validation message strings.
+* Tweak - Renamed plugin to comply with WordPress.org guidelines.
 
 = 1.2.0 =
-* Important - Product Bundles v5.5+ required.
-* Fix - Product Bundles v5.5 compatibility.
-
-= 1.1.1 =
-* Fix - Add-to-cart validation failure when bundle quantity > 1.
+* Fix - Added support for Product Bundles 6.0+.
 
 = 1.1.0 =
-* Fix - WooCommerce v3.0 support.
-* Fix - Product Bundles v5.2 support.
-* Important - Product Bundles v5.1 support dropped.
+* Fix - Added support for Product Bundles 5.10+.
+* Fix - Added support for Bulk Discounts in Bundles contained in Composite Products.
 
 = 1.0.6 =
-* Fix - Product Bundles v5.0 support.
+* Fix - Updated Bundled items minimum quantity calculation.
 
 = 1.0.5 =
-* Fix - Load plugin textdomain on init.
+* Tweak - Declare WooCommerce 3.5 compatibility.
 
 = 1.0.4 =
-* Fix - Composite Products v3.6 support.
-* Fix - Product Bundles v4.14 support. Fix validation notices not displaying on first page load. Requires Product Bundles v4.14.3+.
+* Tweak - Declare WooCommerce 3.3 compatibility.
 
 = 1.0.3 =
-* Fix - Composite Products support.
+* Fix - Client-side totals calculation incorrect when discount amount resets to 0 after a quantity threshold.
 
 = 1.0.2 =
-* Tweak - Bundles with min/max constraints require input: 'Add to cart' button text and behaviour changed.
+* Fix - JS error when viewing bundles with empty discount data.
 
 = 1.0.1 =
-* Fix - Accurate 'from:' price calculation based on the defined qty constraints.
+* Tweak - "Bulk discounts" admin option tooltip.
 
 = 1.0.0 =
 * Initial Release.
 
 
-
 == Upgrade Notice ==
 
-= 1.4.0 =
-Renamed plugin to comply with WordPress.org guidelines.
+= 1.3.1 =
+Declared compatibility with WooCommerce 4.0.
