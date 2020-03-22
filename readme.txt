@@ -5,7 +5,7 @@ Tags: woocommerce, product, bundles, dynamic, pricing, bulk, discount, quantity,
 Requires at least: 4.4
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 WC requires at least: 3.1
 WC tested up to: 4.0
 License: GNU General Public License v3.0
