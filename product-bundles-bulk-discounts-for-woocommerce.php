@@ -403,7 +403,7 @@ class WC_PB_Bulk_Discounts {
 	 * PB version check notice.
 	 */
 	public static function version_notice() {
-		echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Bulk Discounts</strong> requires <a href="%1$s">WooCommerce Product Bundles</a> version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$pb_url, self::$req_pb_version ) . '</p></div>';
+		echo '<div class="error"><p>' . sprintf( __( '<strong>Product Bundles &ndash; Bulk Discounts</strong> requires <a href="%1$s" target="_blank">WooCommerce Product Bundles</a> version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles-bulk-discounts' ), self::$pb_url, self::$req_pb_version ) . '</p></div>';
 	}
 
 	/**
