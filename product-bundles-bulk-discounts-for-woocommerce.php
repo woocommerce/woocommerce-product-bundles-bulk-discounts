@@ -3,19 +3,19 @@
 * Plugin Name: Product Bundles - Bulk Discounts for WooCommerce
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
-* Version: 1.3.1
+* Version: 1.3.2
 * Author: SomewhereWarm
-* Author URI: https://somewherewarm.gr/
+* Author URI: https://somewherewarm.com/
 *
 * Text Domain: woocommerce-product-bundles-bulk-discounts
 * Domain Path: /languages/
 *
 * Requires at least: 4.4
-* Tested up to: 5.3
+* Tested up to: 5.4
 * Requires PHP: 5.6
 
 * WC requires at least: 3.1
-* WC tested up to: 4.0
+* WC tested up to: 4.2
 *
 * Copyright: © 2017-2020 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.3.1';
+	public static $version = '1.3.2';
 
 	/**
 	 * Min required PB version.
@@ -48,7 +48,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	private static $pb_url = 'https://woocommerce.com/products/product-bundles/?aff=46147&cid=7316145&pid=pb_bd';
+	private static $pb_url = 'https://woocommerce.com/products/product-bundles/';
 
 	/**
 	 * Discount data array for access via filter callbacks -- internal use only.
@@ -115,7 +115,7 @@ class WC_PB_Bulk_Discounts {
 		 */
 
 		// Apply discount to bundled cart items.
-		add_filter( 'woocommerce_bundled_cart_item', array( __CLASS__, 'bundled_cart_item_discount' ), 10, 2 );
+		add_filter( 'woocommerce_bundled_cart_item', array( __CLASS__, 'bundled_cart_item_discount' ), -10, 2 );
 
 		// Apply discount to bundle container cart items.
 		add_filter( 'woocommerce_bundle_container_cart_item', array( __CLASS__, 'bundle_container_cart_item_discount' ), 10, 2 );
