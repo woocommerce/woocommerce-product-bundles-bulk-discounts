@@ -2,7 +2,7 @@
 
 ### What's This?
 
-Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5699243) that allows you to create dynamic pricing rules and offer bulk quantity discounts.
+Mini-extension for [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) that allows you to create dynamic pricing rules and offer bulk quantity discounts.
 
 ### How It Works
 
