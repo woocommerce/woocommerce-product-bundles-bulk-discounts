@@ -80,6 +80,10 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.2 =
+* Tweak - Declared WooCommerce 4.2 compatibility.
+* Fix - Bundled product Add-On prices are calculated before discounts in the cart (instead of after).
+
 = 1.3.1 =
 * Fix - Declared compatibility with WooCommerce 4.0.
 * Fix - Initialized plugin text domain.
@@ -119,5 +123,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.1 =
-Declared compatibility with WooCommerce 4.0.
+= 1.3.2 =
+Fixed an issue with WooCommerce Product Add-Ons. Declared support for WooCommerce 4.2.
