@@ -3,11 +3,11 @@
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
-Tested up to: 5.3
+Tested up to: 5.4
 Requires PHP: 5.6
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 WC requires at least: 3.1
-WC tested up to: 4.0
+WC tested up to: 4.2
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -16,7 +16,7 @@ Free mini-extension for WooCommerce Product Bundles that allows you to offer bul
 
 == Description ==
 
-Free mini-extension for the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension that allows you to create [bulk discount](https://docs.woocommerce.com/document/bundles/bundles-use-case-sell-in-bulk/) rules. Use it to offer higher discounts when customers purchase more items in a Product Bundle.
+Free mini-extension for the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension that allows you to create [bulk discount](https://docs.woocommerce.com/document/bundles/bundles-use-case-sell-in-bulk/) rules. Use it to offer higher discounts when customers purchase more items in a Product Bundle.
 
 Compared to rule-based or coupon-based approaches, Product Bundles with bulk discount rules are:
 
@@ -25,7 +25,7 @@ Compared to rule-based or coupon-based approaches, Product Bundles with bulk dis
 
 Additionally, WooCommerce product revenue reports make it easier for you to track the performance of bundles with bulk discount rules.
 
-**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+**Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Documentation ==
@@ -69,7 +69,7 @@ Want to contribute? Please submit issue reports and pull requests on [GitHub](ht
 
 == Installation ==
 
-This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/?aff=46147&cid=5972457) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
+This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
 
 == Screenshots ==
