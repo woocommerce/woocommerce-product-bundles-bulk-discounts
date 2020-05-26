@@ -1,4 +1,4 @@
-# Product Bundles - Bulk Discounts for WooCommerce
+# Product Bundles - Bulk Discounts
 
 ### What's This?
 

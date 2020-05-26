@@ -1,6 +1,6 @@
 <?php
 /**
-* Plugin Name: Product Bundles - Bulk Discounts for WooCommerce
+* Plugin Name: Product Bundles - Bulk Discounts
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
 * Version: 1.3.2

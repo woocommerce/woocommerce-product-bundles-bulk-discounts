@@ -1,4 +1,4 @@
-=== Product Bundles - Bulk Discounts for WooCommerce ===
+=== Product Bundles - Bulk Discounts ===
 
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
