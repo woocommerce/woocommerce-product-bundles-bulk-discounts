@@ -2,9 +2,9 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Product Bundles - Bulk Discounts for WooCommerce 1.3.2\n"
+"Project-Id-Version: Product Bundles - Bulk Discounts 1.3.2\n"
 "Report-Msgid-Bugs-To: support@somewherewarm.gr\n"
-"POT-Creation-Date: 2020-05-20 13:13:50+00:00\n"
+"POT-Creation-Date: 2020-05-26 19:26:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -66,7 +66,7 @@ msgid "%s%%"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
-msgid "Product Bundles - Bulk Discounts for WooCommerce"
+msgid "Product Bundles - Bulk Discounts"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
