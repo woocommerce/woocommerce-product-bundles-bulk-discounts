@@ -10,8 +10,10 @@ sftp-config.json
 
 # Grunt
 /node_modules/
+/vendor/
 /deploy/
 npm-debug.log
+package-lock.json
 
 # Sass
 .sass-cache/
@@ -27,6 +29,7 @@ Thumbs.db
 
 # Unit tests
 /tmp
+/tests/coverage/
 
 # Logs
 /logs
