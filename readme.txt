@@ -80,6 +80,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.3 =
+* Fix - Catalog price issues affecting products with subscription plans created using All Products for WooCommerce Subscriptions.
+
 = 1.3.2 =
 * Tweak - Declared WooCommerce 4.2 compatibility.
 * Fix - Bundled product Add-On prices are calculated before discounts in the cart (instead of after).
@@ -123,5 +126,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.2 =
-Fixed an issue with WooCommerce Product Add-Ons. Declared support for WooCommerce 4.2.
+= 1.3.3 =
+Fixed catalog prices of product with subscription plans created using All Products for WooCommerce Subscriptions.
