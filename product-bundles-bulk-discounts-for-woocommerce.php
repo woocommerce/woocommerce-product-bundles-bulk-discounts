@@ -663,7 +663,7 @@ class WC_PB_Bulk_Discounts {
 	 * @return array
 	 */
 	public static function filter_bundle_prices_hash( $hash, $bundle ) {
-		$hash[] = $bundle->get_meta( '_wc_pb_quantity_discount_data', true );
+		$hash[ 'discount_data' ] = self::decode( $bundle->get_meta( '_wc_pb_quantity_discount_data', true ) );
 		return $hash;
 	}
 
@@ -675,6 +675,10 @@ class WC_PB_Bulk_Discounts {
 	 * @return mixed
 	 */
 	public static function filter_price( $price, $product ) {
+
+		if ( '' === $price ) {
+			return $price;
+		}
 
 		$calculate_discount = true;
 
