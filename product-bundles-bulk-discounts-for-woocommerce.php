@@ -135,7 +135,7 @@ class WC_PB_Bulk_Discounts {
 		 */
 
 		// Modify the catalog price to include discounts for the default min quantities.
-		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10 , 2 );
+		add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10000, 2 );
 
 		// Add a suffix to bundled product prices.
 		add_action( 'woocommerce_bundled_product_price_filters_added', array( __CLASS__, 'add_bundle_discount_price_html_suffix' ), 10, 1 );
@@ -588,12 +588,12 @@ class WC_PB_Bulk_Discounts {
 					self::add_filters();
 
 					// Remove to prevent infinite loop.
-					remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
+					remove_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10000, 2 );
 
 					$price = $product->get_price_html();
 
 					// Add again.
-					add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10, 2 );
+					add_filter( 'woocommerce_get_price_html', array( __CLASS__, 'bundle_get_discounted_price_html' ), 10000, 2 );
 
 					self::remove_filters();
 
