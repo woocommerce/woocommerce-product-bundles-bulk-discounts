@@ -132,5 +132,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.4 =
-Updated supported WordPress and WooCommerce versions.
+= 1.3.5 =
+Minor rounding tweaks.
