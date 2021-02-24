@@ -5,7 +5,7 @@ Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 WC requires at least: 3.1
 WC tested up to: 5.1
 License: GNU General Public License v3.0
@@ -80,6 +80,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.6 =
+* Tweak - Made some further changes to round discounted JS prices using 'WC_PB_Product_Prices::get_discounted_price_precision'.
+
 = 1.3.5 =
 * Tweak - Round discounted prices using 'WC_PB_Product_Prices::get_discounted_price_precision'.
 
@@ -132,5 +135,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.5 =
-Minor rounding tweaks.
+= 1.3.6 =
+Minor price rounding tweaks.

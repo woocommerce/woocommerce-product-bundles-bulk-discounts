@@ -4,6 +4,13 @@
 	var PB_Integration = function( bundle ) {
 
 		/**
+		 * Round discounted price.
+		 */
+		this.round_price = function( number ) {
+			return wc_pb_number_round( number, wc_bundle_params.discounted_price_decimals );
+		};
+
+		/**
 		 * 'bundle_subtotals_data' filter callback.
 		 */
 		this.filter_bundle_totals = function( totals, bundle_price_data, bundle, qty ) {
@@ -12,10 +19,11 @@
 				return totals;
 			}
 
-			var quantities     = bundle_price_data.quantities,
-				discount_data  = bundle_price_data.bulk_discount_data.discount_array,
-				discount       = 0,
-				total_quantity = 0;
+			var self           = this,
+			    quantities     = bundle_price_data.quantities,
+			    discount_data  = bundle_price_data.bulk_discount_data.discount_array,
+			    discount       = 0,
+			    total_quantity = 0;
 
 			if ( discount_data.length > 0 ) {
 
@@ -40,12 +48,12 @@
 					var price_data = $.extend( true, {}, bundle_price_data );
 
 					$.each( bundle.bundled_items, function( index, bundled_item ) {
-						price_data.prices[ bundled_item.bundled_item_id ] = price_data.prices[ bundled_item.bundled_item_id ] * ( 1 - discount / 100 );
+						price_data.prices[ bundled_item.bundled_item_id ] = self.round_price( price_data.prices[ bundled_item.bundled_item_id ] * ( 1 - discount / 100 ) );
 					} );
 
 					// Determine if discount should be applied to the base price.
 					if ( 'yes' === bundle.price_data.bulk_discount_data.discount_base && price_data.base_price ) {
-						price_data.base_price = Number( price_data.base_price ) * ( 1 - discount / 100 );
+						price_data.base_price = self.round_price( Number( price_data.base_price ) * ( 1 - discount / 100 ) );
 					}
 
 					// Prevent infinite loop.
@@ -73,7 +81,7 @@
 			if ( bundle.price_data.bulk_discount_data.discount && bundle.price_data.subtotals.price !== bundle.price_data.totals.price ) {
 
 				var price_html_subtotals = '',
-					price_data_subtotals = $.extend( true, {}, bundle.price_data );
+				    price_data_subtotals = $.extend( true, {}, bundle.price_data );
 
 				/*
 				 * Recalculate price html to strikeout the subtotals' price.
@@ -93,11 +101,11 @@
 				price_html_subtotals = bundle.get_price_html( price_data_subtotals );
 
 				var discount_string        = '<span class="discount">' + wc_bundle_params.i18n_bulk_discount + '</span>',
-					discount_value         = '<span class="discount-amount">' + wc_bundle_params.i18n_bulk_discount_value.replace( '%v', wc_pb_number_round( bundle.price_data.bulk_discount_data.discount, 2 ) ) + '</span>',
-					discount_html_inner    = wc_bundle_params.i18n_bulk_discount_format.replace( '%s', discount_string ).replace( '%v' , discount_value ),
-					discount_html          = '<span class="price-discount">' + discount_html_inner + '</span>',
-					$discounted_price_html = $( price_html ).wrapInner( '<span class="price-total"></span>' ),
-					$price_html            = $( price_html_subtotals ).wrapInner( '<span class="price-subtotal"></span>' );
+				    discount_value         = '<span class="discount-amount">' + wc_bundle_params.i18n_bulk_discount_value.replace( '%v', wc_pb_number_round( bundle.price_data.bulk_discount_data.discount, 2 ) ) + '</span>',
+				    discount_html_inner    = wc_bundle_params.i18n_bulk_discount_format.replace( '%s', discount_string ).replace( '%v' , discount_value ),
+				    discount_html          = '<span class="price-discount">' + discount_html_inner + '</span>',
+				    $discounted_price_html = $( price_html ).wrapInner( '<span class="price-total"></span>' ),
+				    $price_html            = $( price_html_subtotals ).wrapInner( '<span class="price-subtotal"></span>' );
 
 				// Modify existing "Total:" to "Subtotal:".
 				$price_html.find( 'span.total' ).text( wc_bundle_params.i18n_bulk_discount_subtotal );
@@ -142,7 +150,7 @@
 		if ( 'bundle' === step.get_selected_product_type() ) {
 
 			var bundle = step.get_bundle_script(),
-				pb_integration = new PB_Integration( bundle );
+			    pb_integration = new PB_Integration( bundle );
 
 			pb_integration.initialize();
 		}

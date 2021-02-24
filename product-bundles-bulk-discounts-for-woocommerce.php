@@ -3,7 +3,7 @@
 * Plugin Name: Product Bundles - Bulk Discounts
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
-* Version: 1.3.5
+* Version: 1.3.6
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.com/
 *
@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.3.4';
+	public static $version = '1.3.6';
 
 	/**
 	 * Min required PB version.
@@ -830,6 +830,10 @@ class WC_PB_Bulk_Discounts {
 		$parameter_array[ 'i18n_bulk_discount' ]          = __( 'Discount: ', 'woocommerce-product-bundles-bulk-discounts' );
 		$parameter_array[ 'i18n_bulk_discount_value' ]    = sprintf( __( '%s%%', 'woocommerce-product-bundles-bulk-discounts' ), '%v' );
 		$parameter_array[ 'i18n_bulk_discount_format' ]   = sprintf( _x( '%1$s%2$s', '"Discount" string followed by value', 'woocommerce-product-bundles-bulk-discounts' ), '%s', '%v' );
+
+		if ( ! isset( $parameter_array[ 'discounted_price_decimals' ] ) ) {
+			$parameter_array[ 'discounted_price_decimals' ] = WC_PB_Product_Prices::get_discounted_price_precision();
+		}
 
 		return $parameter_array;
 	}
