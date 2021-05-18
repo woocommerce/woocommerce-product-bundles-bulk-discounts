@@ -471,9 +471,12 @@ class WC_PB_Bulk_Discounts {
 
 				$bundled_items_data = $container[ 'stamp' ];
 				$total_quantity     = 0;
+				$bundled_items      = $container[ 'data' ]->get_bundled_items();
 
-				foreach ( $bundled_items_data as $bundled_item_data ) {
-					if ( isset( $bundled_item_data[ 'quantity' ] ) ) {
+				foreach ( $bundled_items_data as $bundled_item_id => $bundled_item_data ) {
+					$bundled_item = $bundled_items[ $bundled_item_id ];
+
+					if ( isset( $bundled_item_data[ 'quantity' ] ) && ( ! $bundled_item->is_optional() || ( isset( $bundled_item_data[ 'optional_selected' ] ) && $bundled_item_data[ 'optional_selected' ] === 'yes' ) ) ) {
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
@@ -516,9 +519,12 @@ class WC_PB_Bulk_Discounts {
 
 				$bundled_items_data = $cart_item[ 'stamp' ];
 				$total_quantity     = 0;
+				$bundled_items      = $cart_item[ 'data' ]->get_bundled_items();
 
-				foreach ( $bundled_items_data as $bundled_item_data ) {
-					if ( isset( $bundled_item_data[ 'quantity' ] ) ) {
+				foreach ( $bundled_items_data as $bundled_item_id => $bundled_item_data ) {
+					$bundled_item = $bundled_items[ $bundled_item_id ];
+
+					if ( isset( $bundled_item_data[ 'quantity' ] ) && ( ! $bundled_item->is_optional() || ( isset( $bundled_item_data[ 'optional_selected' ] ) && $bundled_item_data[ 'optional_selected' ] === 'yes' ) ) ) {
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
