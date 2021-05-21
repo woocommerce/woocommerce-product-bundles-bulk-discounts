@@ -473,7 +473,7 @@ class WC_PB_Bulk_Discounts {
 				$total_quantity     = 0;
 
 				foreach ( $bundled_items_data as $bundled_item_data ) {
-					if ( isset( $bundled_item_data[ 'quantity' ] ) ) {
+					if ( isset( $bundled_item_data[ 'quantity' ] ) && ( ! isset( $bundled_item_data[ 'optional_selected' ] ) || $bundled_item_data[ 'optional_selected' ] === 'yes' ) ) {
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
@@ -518,7 +518,7 @@ class WC_PB_Bulk_Discounts {
 				$total_quantity     = 0;
 
 				foreach ( $bundled_items_data as $bundled_item_data ) {
-					if ( isset( $bundled_item_data[ 'quantity' ] ) ) {
+					if ( isset( $bundled_item_data[ 'quantity' ] ) && ( ! isset( $bundled_item_data[ 'optional_selected' ] ) || $bundled_item_data[ 'optional_selected' ] === 'yes' ) ) {
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
