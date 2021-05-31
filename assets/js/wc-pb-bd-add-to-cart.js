@@ -125,6 +125,10 @@
 		// Init.
 		this.initialize = function() {
 
+			if ( typeof bundle.price_data.bulk_discount_data === 'undefined' ) {
+				return;
+			}
+
 			/**
 			 * Filter totals using 'totals' JS filter.
 			 */

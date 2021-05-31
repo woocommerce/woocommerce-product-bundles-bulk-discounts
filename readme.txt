@@ -5,7 +5,7 @@ Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 WC requires at least: 3.1
 WC tested up to: 5.3
 License: GNU General Public License v3.0
@@ -86,6 +86,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.8 =
+* Fix - Undefined 'bundle.price_data.bulk_discount_data' error.
+
 = 1.3.7 =
 * Fix - Fixed an issue that could cause unselected optional items to be counted when calculating bulk discounts.
 * Fix - Keep running total visible when discounting base prices.
@@ -145,5 +148,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.7 =
+= 1.3.8 =
 Minor fixes.
