@@ -3,11 +3,11 @@
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 WC requires at least: 3.1
-WC tested up to: 5.1
+WC tested up to: 5.3
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -64,6 +64,12 @@ This means that:
 
 When a Product Bundle with bulk discounts is configured, the applicable discount and total is dynamically calculated and displayed.
 
+By default, bulk discounts are applied to the prices of all bundled products that are **Priced Individually**. Base Regular/Sale Prices are not be discounted. To discount base prices, use the following snippet:
+
+`
+add_filter( 'wc_pb_bulk_discount_apply_to_base_price', '__return_true' );
+`
+
 Want to contribute? Please submit issue reports and pull requests on [GitHub](https://github.com/somewherewarm/woocommerce-product-bundles-bulk-discounts).
 
 
@@ -79,6 +85,10 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 1.3.7 =
+* Fix - Fixed an issue that could cause unselected optional items to be counted when calculating bulk discounts.
+* Fix - Keep running total visible when discounting base prices.
 
 = 1.3.6 =
 * Tweak - Made some further changes to round discounted JS prices using 'WC_PB_Product_Prices::get_discounted_price_precision'.
@@ -135,5 +145,5 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Upgrade Notice ==
 
-= 1.3.6 =
-Minor price rounding tweaks.
+= 1.3.7 =
+Minor fixes.

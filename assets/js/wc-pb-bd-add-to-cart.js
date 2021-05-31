@@ -134,6 +134,15 @@
 			 * Filter price total html using 'bundle_total_price_html' JS filter.
 			 */
 			bundle.filters.add_filter( 'bundle_total_price_html', this.filter_bundle_total_price_html, 10, this );
+
+			/**
+			 * When discounting base prices, always force totals recalculation when changes happen, otherwise the totals will never be updated because subtotals don't change.
+			 */
+			if ( 'yes' === bundle.price_data.bulk_discount_data.discount_base && bundle.price_data.base_price ) {
+				bundle.$bundle_data.on( 'woocommerce-product-bundle-update', function( event ) {
+					bundle.dirty_subtotals = true;
+				} );
+			}
 		};
 	};
 
