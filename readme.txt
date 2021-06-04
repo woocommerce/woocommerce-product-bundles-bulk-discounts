@@ -86,6 +86,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.9 =
+* Feature - Added support for the WooCommerce Importer/Exporter.
+
 = 1.3.8 =
 * Fix - Undefined 'bundle.price_data.bulk_discount_data' error.
 
