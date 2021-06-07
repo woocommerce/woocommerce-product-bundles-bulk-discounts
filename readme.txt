@@ -86,6 +86,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 == Changelog ==
 
+= 1.3.9 =
+* Fix - Total Bundle price mismatch between the single product page and the cart when discounts are calculated over bundled items' Regular Prices. 
+
 = 1.3.8 =
 * Fix - Undefined 'bundle.price_data.bulk_discount_data' error.
 

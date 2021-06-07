@@ -3,7 +3,7 @@
 * Plugin Name: Product Bundles - Bulk Discounts
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
-* Version: 1.3.8
+* Version: 1.3.9
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.com/
 *
@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.3.8';
+	public static $version = '1.3.9';
 
 	/**
 	 * Min required PB version.
@@ -820,6 +820,16 @@ class WC_PB_Bulk_Discounts {
 			if ( $apply_discount_to_base_price ) {
 				$price_data[ 'raw_bundle_price_max' ] = '';
 			}
+		}
+
+		$bundled_items = $bundle->get_bundled_items();
+
+		if ( empty( $bundled_items ) ) {
+			return;
+		}
+
+		foreach ( $bundled_items as $bundled_item ) {
+			$price_data[ 'bulk_discounts_on_regular_price' ][ $bundled_item->get_id() ] = $bundled_item->is_discount_allowed_on_sale_price() ? 'no' : 'yes';
 		}
 
 		return $price_data;
