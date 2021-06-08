@@ -489,6 +489,9 @@ class WC_PB_Bulk_Discounts {
 					$meta_data[ 'value' ]                 = json_decode( $meta_data[ 'value' ], true );
 					$parsed_data[ 'meta_data' ][ $index ] = $meta_data;
 				}
+
+				break;
+
 			}
 		}
 
