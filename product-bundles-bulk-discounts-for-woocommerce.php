@@ -15,7 +15,7 @@
 * Requires PHP: 5.6
 
 * WC requires at least: 3.1
-* WC tested up to: 5.3
+* WC tested up to: 5.4
 *
 * Copyright: © 2017-2021 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
