@@ -15,7 +15,7 @@
 * Requires PHP: 5.6
 
 * WC requires at least: 3.1
-* WC tested up to: 5.3
+* WC tested up to: 5.4
 *
 * Copyright: © 2017-2021 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
@@ -109,6 +109,12 @@ class WC_PB_Bulk_Discounts {
 
 		// Save discount data.
 		add_action( 'woocommerce_admin_process_product_object', array( __CLASS__, 'save_meta' ) );
+
+		// Export bulk discounts as formatted meta data.
+		add_filter( 'woocommerce_product_export_meta_value', array( __CLASS__, 'export_bulk_discounts' ), 10, 2 );
+
+		// Parse and import bulk discounts.
+		add_filter( 'woocommerce_product_importer_parsed_data', array( __CLASS__, 'import_bulk_discounts' ), 10, 1 );
 
 		/*
 		 * Cart.
@@ -444,6 +450,54 @@ class WC_PB_Bulk_Discounts {
 			$product->delete_meta_data( '_wc_pb_quantity_discount_data' );
 		}
 	}
+
+	/**
+	 * Export bulk discounts as formatted meta data.
+	 *
+	 * @param  string        $meta_value
+	 * @param  WC_Meta_Data  $meta
+	 * @return string        $meta_value
+	 */
+	public static function export_bulk_discounts( $meta_value, $meta ) {
+
+		if ( '_wc_pb_quantity_discount_data' === $meta->key ){
+			$meta_value = json_encode( maybe_unserialize( $meta_value ) );
+
+		}
+
+		return $meta_value;
+	}
+
+	/**
+	 * Parse and import bulk discounts.
+	 *
+	 * @param  array  $parsed_data
+	 * @return array  $parsed_data
+	 */
+	public static function import_bulk_discounts( $parsed_data ) {
+
+		if ( empty( $parsed_data[ 'meta_data' ] ) ) {
+			return $parsed_data;
+		}
+
+		foreach ( $parsed_data[ 'meta_data' ] as $index => $meta_data ) {
+
+			if ( '_wc_pb_quantity_discount_data' === $meta_data[ 'key' ] ) {
+
+				if ( ! empty( $meta_data[ 'value' ] ) ) {
+
+					$meta_data[ 'value' ]                 = json_decode( $meta_data[ 'value' ], true );
+					$parsed_data[ 'meta_data' ][ $index ] = $meta_data;
+				}
+
+				break;
+
+			}
+		}
+
+		return $parsed_data;
+	}
+
 
 	/*
 	|--------------------------------------------------------------------------
