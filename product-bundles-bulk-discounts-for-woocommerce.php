@@ -876,6 +876,16 @@ class WC_PB_Bulk_Discounts {
 			}
 		}
 
+		$bundled_items = $bundle->get_bundled_items();
+
+		if ( empty( $bundled_items ) ) {
+			return;
+		}
+
+		foreach ( $bundled_items as $bundled_item ) {
+			$price_data[ 'bulk_discounts_on_regular_price' ][ $bundled_item->get_id() ] = $bundled_item->is_discount_allowed_on_sale_price() ? 'no' : 'yes';
+		}
+
 		return $price_data;
 	}
 

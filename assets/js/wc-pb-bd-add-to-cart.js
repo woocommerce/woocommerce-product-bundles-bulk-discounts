@@ -48,7 +48,11 @@
 					var price_data = $.extend( true, {}, bundle_price_data );
 
 					$.each( bundle.bundled_items, function( index, bundled_item ) {
-						price_data.prices[ bundled_item.bundled_item_id ] = self.round_price( price_data.prices[ bundled_item.bundled_item_id ] * ( 1 - discount / 100 ) );
+						if ( 'yes' === price_data.bulk_discounts_on_regular_price[ bundled_item.bundled_item_id ] ) {
+							price_data.prices[ bundled_item.bundled_item_id ] = self.round_price( price_data.regular_prices[ bundled_item.bundled_item_id ] * ( 1 - discount / 100 ) );
+						} else {
+							price_data.prices[ bundled_item.bundled_item_id ] = self.round_price( price_data.prices[ bundled_item.bundled_item_id ] * ( 1 - discount / 100 ) );
+						}
 					} );
 
 					// Determine if discount should be applied to the base price.
