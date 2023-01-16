@@ -27,6 +27,9 @@ Additionally, WooCommerce product revenue reports make it easier for you to trac
 
 **Important**: This plugin requires the official [WooCommerce Product Bundles](https://woocommerce.com/products/product-bundles/) extension. Before installing this plugin, please ensure that you are running the latest versions of both **WooCommerce** and **WooCommerce Product Bundles**.
 
+**Note**: This experimental plugin has been created to validate and refine a feature that may be rolled into WooCommerce Product Bundles -- or dropped! -- in the future.
+
+**Important**: The code in this plugin is provided "as is". Support via the WordPress.org forum is provided on a **voluntary** basis only. If you have an active subscription for WooCommerce Product Bundles, please be aware that WooCommerce Support may not be able to assist you with this experimental plugin.
 
 == Documentation ==
 
