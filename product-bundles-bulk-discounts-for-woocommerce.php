@@ -3,7 +3,7 @@
 * Plugin Name: Product Bundles - Bulk Discounts
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
-* Version: 1.3.9
+* Version: 1.4.0
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.com/
 *
@@ -11,13 +11,13 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.4
-* Tested up to: 5.7
+* Tested up to: 6.3
 * Requires PHP: 5.6
 
 * WC requires at least: 3.1
-* WC tested up to: 5.4
+* WC tested up to: 8.0
 *
-* Copyright: © 2017-2021 SomewhereWarm SMPC.
+* Copyright: © 2017-2023 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -34,7 +34,7 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.3.9';
+	public static $version = '1.4.0';
 
 	/**
 	 * Min required PB version.
@@ -151,11 +151,17 @@ class WC_PB_Bulk_Discounts {
 		add_action( 'woocommerce_bundle_add_to_cart', array( __CLASS__, 'script' ) );
 		add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
 
+		add_filter( 'woocommerce_pb_script_dependencies', array( __CLASS__, 'add_script_dependency' ) );
+		add_filter( 'woocommerce_composite_script_dependencies', array( __CLASS__, 'add_script_dependency' ) );
+
 		// Add parameters to bundle price data.
 		add_filter( 'woocommerce_bundle_price_data', array( __CLASS__, 'add_discount_data' ), 10, 2 );
 
 		// Parameters passed to the script.
 		add_filter( 'woocommerce_bundle_front_end_params', array( __CLASS__, 'add_front_end_params' ), 10, 1 );
+
+		// Declare HPOS compatibility.
+		add_action( 'before_woocommerce_init', array( __CLASS__, 'declare_hpos_compatibility' ) );
 
 		// Localization.
 		add_action( 'init', array( __CLASS__, 'localize_plugin' ) );
@@ -168,6 +174,19 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function localize_plugin() {
 		load_plugin_textdomain( 'woocommerce-product-bundles-bulk-discounts', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	}
+
+	/**
+	 * Declare HPOS( Custom Order tables) compatibility.
+	 *
+	 */
+	public static function declare_hpos_compatibility() {
+
+		if ( ! class_exists( 'Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			return;
+		}
+
+		\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', plugin_basename( __FILE__ ), true );
 	}
 
 	/*
@@ -836,11 +855,20 @@ class WC_PB_Bulk_Discounts {
 
 		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_register_script( 'wc-pb-bd-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-bd-add-to-cart' . $suffix . '.js', array(), self::$version );
-		wp_enqueue_script( 'wc-pb-bd-add-to-cart' );
-
+		wp_register_script( 'wc-pb-bd-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-bd-add-to-cart' . $suffix . '.js', array( 'jquery', 'wc-add-to-cart-variation' ), self::$version, true );
 		wp_register_style( 'wc-pb-bd-styles', self::plugin_url() . '/assets/css/wc-pb-bd-styles.css', false, self::$version, 'all' );
 		wp_enqueue_style( 'wc-pb-bd-styles' );
+	}
+
+	/**
+	 * Add the Bulk Discounts script as a dependency to the main Bundle/Composite script.
+	 *
+	 * @param array $dependencies
+	 *
+	 */
+	public static function add_script_dependency( $dependencies ) {
+		$dependencies[] = 'wc-pb-bd-add-to-cart';
+		return $dependencies;
 	}
 
 	/**
