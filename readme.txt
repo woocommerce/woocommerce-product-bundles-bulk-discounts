@@ -5,7 +5,7 @@ Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
 Requires at least: 4.4
 Tested up to: 5.7
 Requires PHP: 5.6
-Stable tag: 1.3.9
+Stable tag: 1.4.0
 WC requires at least: 3.1
 WC tested up to: 5.4
 License: GNU General Public License v3.0
@@ -88,6 +88,10 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 1.4.0 =
+* Feature - Added compatibility with the new block-based Single Product Template.
+* Feature - Declared compatibility with the new High-Performance Order Tables. 
 
 = 1.3.9 =
 * Feature - Added support for the WooCommerce Importer/Exporter.
