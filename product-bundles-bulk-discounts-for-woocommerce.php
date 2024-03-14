@@ -3,7 +3,7 @@
 * Plugin Name: Product Bundles - Bulk Discounts
 * Plugin URI: https://docs.woocommerce.com/document/bundles/bundles-extensions/#bulk-discounts
 * Description: Bulk quantity discounts for WooCommerce Product Bundles.
-* Version: 1.4.0
+* Version: 1.4.1
 * Author: SomewhereWarm
 * Author URI: https://somewherewarm.com/
 *
@@ -17,7 +17,7 @@
 * WC requires at least: 3.1
 * WC tested up to: 8.0
 *
-* Copyright: © 2017-2023 SomewhereWarm SMPC.
+* Copyright: © 2017-2024 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -34,14 +34,14 @@ class WC_PB_Bulk_Discounts {
 	 *
 	 * @var string
 	 */
-	public static $version = '1.4.0';
+	public static $version = '1.4.1';
 
 	/**
 	 * Min required PB version.
 	 *
 	 * @var string
 	 */
-	public static $req_pb_version = '6.0';
+	public static $req_pb_version = '7.0';
 
 	/**
 	 * PB URL.
@@ -556,8 +556,11 @@ class WC_PB_Bulk_Discounts {
 					if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
 
 						// Store a unique copy of the bundled item to avoid caching issues -- see 'WC_Product_Bundle::get_bundled_item'.
-						$cart_item[ 'data' ]->bundled_cart_item                = $container[ 'data' ]->get_bundled_item( $cart_item[ 'bundled_item_id' ], 'view', array( 'configuration' => $bundled_items_data ) );
-						$cart_item[ 'data' ]->bundled_cart_item->bulk_discount = $discount;
+
+						$bundled_cart_item                = $container[ 'data' ]->get_bundled_item( $cart_item[ 'bundled_item_id' ], 'view', array( 'configuration' => $bundled_items_data ) );
+						$bundled_cart_item->bulk_discount = $discount;
+
+						WC_PB()->product_data->set( $cart_item[ 'data' ], 'bundled_cart_item', $bundled_cart_item );
 
 					} else {
 
@@ -595,11 +598,9 @@ class WC_PB_Bulk_Discounts {
 						$total_quantity += $bundled_item_data[ 'quantity' ];
 					}
 				}
-
 				if ( $discount = self::get_discount( $total_quantity, $discount_data_array ) ) {
-
 					if ( 'filters' === WC_PB_Product_Prices::get_bundled_cart_item_discount_method() ) {
-						$cart_item[ 'data' ]->bundle_bulk_discount = $discount;
+						WC_PB()->product_data->set( $cart_item[ 'data' ], 'bundle_bulk_discount', $discount );
 					} else {
 						$cart_item[ 'data' ]->set_price( self::get_discounted_price( $price, $discount ) );
 					}
@@ -786,8 +787,8 @@ class WC_PB_Bulk_Discounts {
 
 		$discount = false;
 
-		if ( isset( $product->bundle_bulk_discount ) ) {
-			$discount = $product->bundle_bulk_discount;
+		if ( ! is_null( WC_PB()->product_data->get( $product, 'bundle_bulk_discount' ) ) ) {
+			$discount = WC_PB()->product_data->get( $product, 'bundle_bulk_discount' );
 		}
 
 		if ( ! $discount ) {
