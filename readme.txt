@@ -2,12 +2,12 @@
 
 Contributors: franticpsyx, SomewhereWarm
 Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
-Requires at least: 4.4
-Tested up to: 6.3
-Requires PHP: 5.6
-Stable tag: 1.4.1
-WC requires at least: 3.1
-WC tested up to: 8.0
+Requires at least: 6.2
+Tested up to: 6.6
+Requires PHP: 7.4
+Stable tag: 2.0.0
+WC requires at least: 8.2
+WC tested up to: 9.1
 License: GNU General Public License v3.0
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -88,6 +88,12 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 2.0.0 =
+* Important - New: PHP 7.4+ is now required.
+* Important - New: WooCommerce 8.2+ is now required.
+* Important - New: WordPress 6.2+ is now required.
+* Important - New: Product Bundles 8.0+ is now required.
 
 = 1.4.1 =
 * Tweak - The Bulk Discounts mini-extension now requires Product Bundles 7.0+.
