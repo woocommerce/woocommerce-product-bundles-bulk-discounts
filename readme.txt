@@ -1,7 +1,7 @@
 === Product Bundles - Bulk Discounts ===
 
-Contributors: franticpsyx, SomewhereWarm
-Tags: woocommerce, product, bundles, bulk, discount, quantity, tiers, rules
+Contributors: SomewhereWarm
+Tags: woocommerce, bundles, bulk, discount, rules
 Requires at least: 6.2
 Tested up to: 6.6
 Requires PHP: 7.4
