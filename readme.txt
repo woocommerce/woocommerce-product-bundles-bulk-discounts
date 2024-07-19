@@ -1,6 +1,6 @@
 === Product Bundles - Bulk Discounts ===
 
-Contributors: SomewhereWarm
+Contributors: automattic, woocommerce, SomewhereWarm
 Tags: woocommerce, bundles, bulk, discount, rules
 Requires at least: 6.2
 Tested up to: 6.6
