@@ -1,46 +1,48 @@
-# Copyright (C) 2021 SomewhereWarm
+# Copyright (C) 2024 WooCommerce
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Product Bundles - Bulk Discounts 1.3.9\n"
-"Report-Msgid-Bugs-To: support@somewherewarm.gr\n"
-"POT-Creation-Date: 2021-06-15 12:14:41+00:00\n"
+"Project-Id-Version: Product Bundles - Bulk Discounts 2.0.1\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/woocommerce-product-bundles-bulk-"
+"discounts\n"
+"POT-Creation-Date: 2024-09-19 06:24:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:269
-#: product-bundles-bulk-discounts-for-woocommerce.php:282
-#: product-bundles-bulk-discounts-for-woocommerce.php:374
+#: product-bundles-bulk-discounts-for-woocommerce.php:288
+#: product-bundles-bulk-discounts-for-woocommerce.php:301
+#: product-bundles-bulk-discounts-for-woocommerce.php:393
 msgid "Line <strong> %s </strong> not saved. Invalid format."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:316
-#: product-bundles-bulk-discounts-for-woocommerce.php:325
-#: product-bundles-bulk-discounts-for-woocommerce.php:333
+#: product-bundles-bulk-discounts-for-woocommerce.php:335
+#: product-bundles-bulk-discounts-for-woocommerce.php:344
+#: product-bundles-bulk-discounts-for-woocommerce.php:352
 msgid "Line <strong> %s </strong> not saved. Overlapping data."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:345
+#: product-bundles-bulk-discounts-for-woocommerce.php:364
 msgid "Line <strong> %s </strong> not saved. Invalid discount."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:412
+#: product-bundles-bulk-discounts-for-woocommerce.php:431
 msgid ""
 "<strong>Product Bundles &ndash; Bulk Discounts</strong> requires <a "
 "href=\"%1$s\" target=\"_blank\">WooCommerce Product Bundles</a> version "
 "<strong>%2$s</strong> or higher."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:429
+#: product-bundles-bulk-discounts-for-woocommerce.php:448
 msgid "Bulk Discounts"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:430
+#: product-bundles-bulk-discounts-for-woocommerce.php:449
 msgid ""
 "Define bulk discounts by adding one discount rule per line in either: i) "
 "quantity range format, e.g. <strong>1 - 5 | 5</strong>, ii) single quantity "
@@ -49,19 +51,19 @@ msgid ""
 "expressed in % only."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:813
+#: product-bundles-bulk-discounts-for-woocommerce.php:833
 msgid "%s <small>(before discount)</small>"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:900
+#: product-bundles-bulk-discounts-for-woocommerce.php:929
 msgid "Subtotal: "
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:901
+#: product-bundles-bulk-discounts-for-woocommerce.php:930
 msgid "Discount: "
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:902
+#: product-bundles-bulk-discounts-for-woocommerce.php:931
 msgid "%s%%"
 msgstr ""
 
@@ -80,14 +82,14 @@ msgid "Bulk quantity discounts for WooCommerce Product Bundles."
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "SomewhereWarm"
+msgid "WooCommerce"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "https://somewherewarm.com/"
+msgid "https://woocommerce.com/"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:903
+#: product-bundles-bulk-discounts-for-woocommerce.php:932
 msgctxt "\"Discount\" string followed by value"
 msgid "%1$s%2$s"
 msgstr ""

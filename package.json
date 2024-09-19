@@ -1,10 +1,10 @@
 {
 	"name": "woocommerce-product-bundles-bulk-discounts",
 	"title": "Product Bundles - Bulk Discounts for WooCommerce",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/somewherewarm/woocommerce-product-bundles-bulk-discounts.git"
+		"url": "https://github.com/woocommerce/woocommerce-product-bundles-bulk-discounts.git"
 	},
 	"license": "GPL-3.0+",
 	"homepage": "http://woocommerce.com/products/product-bundles/",
