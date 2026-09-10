@@ -2,7 +2,7 @@
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
-"Project-Id-Version: Product Bundles - Bulk Discounts 2.0.1\n"
+"Project-Id-Version: Product Bundles - Bulk Discounts 2.0.2\n"
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/woocommerce-product-bundles-bulk-"
 "discounts\n"

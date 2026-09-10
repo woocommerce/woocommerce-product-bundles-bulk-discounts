@@ -5,7 +5,7 @@ Tags: woocommerce, bundles, bulk, discount, rules
 Requires at least: 6.2
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 WC requires at least: 8.2
 WC tested up to: 9.1
 License: GNU General Public License v3.0
@@ -88,6 +88,9 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 
 == Changelog ==
+
+= 2.0.2 =
+* Security - Hardened product CSV exports against malformed bulk discount metadata.
 
 = 2.0.1 =
 * Tweak - Updated author links.
