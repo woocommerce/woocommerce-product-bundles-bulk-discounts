@@ -479,8 +479,8 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function export_bulk_discounts( $meta_value, $meta ) {
 
-		if ( '_wc_pb_quantity_discount_data' === $meta->key ){
-			$meta_value = json_encode( maybe_unserialize( $meta_value ) );
+		if ( '_wc_pb_quantity_discount_data' === $meta->key && is_array( $meta_value ) ) {
+			$meta_value = json_encode( $meta_value );
 
 		}
 
