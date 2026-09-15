@@ -90,6 +90,7 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 == Changelog ==
 
 = 2.0.2 =
+* Dev - Updated development dependencies to address security advisories.
 * Security - Hardened product CSV exports against malformed bulk discount metadata.
 
 = 2.0.1 =
