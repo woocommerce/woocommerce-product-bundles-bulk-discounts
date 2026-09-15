@@ -2,33 +2,15 @@
 
 ## Project knowledge
 
-This mini-extension adds quantity discount tiers to WooCommerce Product Bundles.
-`WC_PB_Bulk_Discounts` in `product-bundles-bulk-discounts-for-woocommerce.php` contains
-the bootstrap, admin field, price calculations, cart integration, and CSV hooks.
+This mini-extension adds quantity discount tiers to WooCommerce Product Bundles. `WC_PB_Bulk_Discounts` in `product-bundles-bulk-discounts-for-woocommerce.php` contains the bootstrap, admin field, price calculations, cart integration, and CSV hooks.
 
-- Check the plugin header and `readme.txt` for WordPress, WooCommerce, and PHP
-  requirements. The Product Bundles minimum comes from
-  `WC_PB_Bulk_Discounts::$req_pb_version`; `load_plugin()` checks it before registering
-  integrations. Do not infer supported versions from an older README or release.
-- `package.json` declares the legacy Node/npm requirements. There is no `.nvmrc`,
-  lockfile, Composer project, or npm script table. Verify dependency compatibility
-  before using a different toolchain; modernization is separate work.
-- PHP classes/methods, `wc_pb_bulk_discount_apply_to_base_price`, and the consumed
-  Product Bundles hooks are extension contracts. Check both the minimum supported
-  and current Product Bundles behavior when changing pricing or integration code.
-- `_wc_pb_quantity_discount_data` persists tier arrays on products. Preserve the
-  quantity range and percentage formats, price-data payloads, and CSV round trips.
-  The plugin has no versioned migration runner; add one if a persistent-format
-  change needs a migration rather than merely changing future writes.
-- By default, discounts apply to individually priced bundled items; base prices are
-  unchanged unless `wc_pb_bulk_discount_apply_to_base_price` enables them. Keep the
-  product-page totals, catalog price, and cart calculations consistent, including
-  bundles inside Composite Products.
-- CSV export receives metadata already decoded by WooCommerce. Do not deserialize
-  it again. Encode expected tier arrays as JSON and preserve unexpected values;
-  import handles the corresponding JSON representation.
-- Preserve the `wc-pb-bd-add-to-cart` script and `wc-pb-bd-styles` style handles and
-  Product Bundles/Composite Products script dependencies.
+- Check the plugin header and `readme.txt` for WordPress, WooCommerce, and PHP requirements. The Product Bundles minimum comes from `WC_PB_Bulk_Discounts::$req_pb_version`; `load_plugin()` checks it before registering integrations. Do not infer supported versions from an older README or release.
+- `package.json` declares the legacy Node/npm requirements. There is no `.nvmrc`, lockfile, Composer project, or npm script table. Verify dependency compatibility before using a different toolchain; modernization is separate work.
+- PHP classes/methods, `wc_pb_bulk_discount_apply_to_base_price`, and the consumed Product Bundles hooks are extension contracts. Check both the minimum supported and current Product Bundles behavior when changing pricing or integration code.
+- `_wc_pb_quantity_discount_data` persists tier arrays on products. Preserve the quantity range and percentage formats, price-data payloads, and CSV round trips. The plugin has no versioned migration runner; add one if a persistent-format change needs a migration rather than merely changing future writes.
+- By default, discounts apply to individually priced bundled items; base prices are unchanged unless `wc_pb_bulk_discount_apply_to_base_price` enables them. Keep the product-page totals, catalog price, and cart calculations consistent, including bundles inside Composite Products.
+- CSV export receives metadata already decoded by WooCommerce. Do not deserialize it again. Encode expected tier arrays as JSON and preserve unexpected values; import handles the corresponding JSON representation.
+- Preserve the `wc-pb-bd-add-to-cart` script and `wc-pb-bd-styles` style handles and Product Bundles/Composite Products script dependencies.
 
 ### Source and generated files
 
@@ -41,16 +23,11 @@ the bootstrap, admin field, price calculations, cart integration, and CSV hooks.
 | `languages/woocommerce-product-bundles-bulk-discounts.pot` | Generated translation catalog |
 | `tests/export-bulk-discounts.php` | Standalone CSV regression test |
 
-Source files live under `assets/`; a blanket prohibition on editing that directory
-would be wrong. Rebuild minified JavaScript after changing its source, and inspect
-the generated diff. Use the `woocommerce-product-bundles-bulk-discounts` text domain.
+Source files live under `assets/`; a blanket prohibition on editing that directory would be wrong. Rebuild minified JavaScript after changing its source, and inspect the generated diff. Use the `woocommerce-product-bundles-bulk-discounts` text domain.
 
 ## Commands and validation
 
-No dependency installation is needed for documentation changes or the standalone
-PHP regression test. For JavaScript/build work, run `npm install` and use a compatible
-`grunt-cli` installation. The repository declares Grunt tasks but does not provide
-the CLI itself; ensure `grunt --version` resolves both before running build commands.
+No dependency installation is needed for documentation changes or the standalone PHP regression test. For JavaScript/build work, run `npm install` and use a compatible `grunt-cli` installation. The repository declares Grunt tasks but does not provide the CLI itself; ensure `grunt --version` resolves both before running build commands.
 
 | Command | Purpose |
 | --- | --- |
@@ -63,22 +40,13 @@ the CLI itself; ensure `grunt --version` resolves both before running build comm
 | `php tests/export-bulk-discounts.php` | Standalone CSV regression assertions |
 | `git diff --check` | Check patch whitespace |
 
-`jshint.options.force` is `true`, so a successful process exit does not establish that
-JSHint reported no errors. Review its output. The default Grunt task does not run
-JSHint. Do not describe either as an enforced CI lint gate.
+`jshint.options.force` is `true`, so a successful process exit does not establish that JSHint reported no errors. Review its output. The default Grunt task does not run JSHint. Do not describe either as an enforced CI lint gate.
 
-The CSV test is on `master` after PR #34. It stubs WordPress hooks/helpers and checks
-export/import behavior without a WordPress database. It does not cover the admin UI,
-cart, frontend totals, or installed Product Bundles integration. No PHPUnit, PHPCS,
-wp-env, E2E, or typecheck configuration is provided here. Do not invent commands for
-those tools. Use a separate WordPress/WooCommerce site with Product Bundles for
-integration checks, and report which flows were actually exercised.
+The CSV test is on `master` after PR #34. It stubs WordPress hooks/helpers and checks export/import behavior without a WordPress database. It does not cover the admin UI, cart, frontend totals, or installed Product Bundles integration. No PHPUnit, PHPCS, wp-env, E2E, or typecheck configuration is provided here. Do not invent commands for those tools. Use a separate WordPress/WooCommerce site with Product Bundles for integration checks, and report which flows were actually exercised.
 
 ## Workflow and standards to align later
 
-- The approved development base is `master`, an explicit exception to the SWW
-  workspace's usual `trunk`. Fetch `origin/master` before creating an issue worktree;
-  use the exact Linear-generated branch name. Do not stack on another fix branch.
+- The approved development base is `master`, an explicit exception to the SWW workspace's usual `trunk`. Fetch `origin/master` before creating an issue worktree; use the exact Linear-generated branch name. Do not stack on another fix branch.
 
   ```bash
   git fetch origin master
@@ -86,111 +54,53 @@ integration checks, and report which flows were actually exercised.
   git worktree add ../woocommerce-product-bundles-bulk-discounts-strprod-1324 -b "$issue_branch" origin/master
   ```
 
-  Replace both example names for a different issue. Remove only your clean worktree
-  after its work is safely pushed and reviewed; leave other tasks' worktrees alone.
-  There is no managed test environment or port configuration to copy from Product Bundles.
-- This repository and the WooCommerce organization currently provide no default PR
-  template. Use a brief description with `Changes proposed`, `How to test`, and
-  `Changelog` sections, starting with `Closes LINEAR_ID`. Draft PRs and permission
-  boundaries follow the workspace rules. No milestone checkbox/automation is present.
-- Release versions appear in the plugin header, class `$version`, `package.json`,
-  and `readme.txt`. The changelog lives directly in `readme.txt`; there is no
-  Changelogger or checked-in release workflow. Confirm the publishing procedure
-  before a release. Do not infer a release command from the parent Product Bundles repo.
-- Documentation-only changes need no user-facing changelog entry; state that in the
-  PR. For behavior changes, use the existing one-line changelog style and keep the
-  changelog in its own final commit. Do not alter released version numbers for docs.
-- Build/runtime modernization, stronger lint enforcement, broader tests, a PR
-  template/milestone workflow, and release automation remain separate alignment work.
-  Keep the current tooling accurately documented until those decisions are made.
+  Replace both example names for a different issue. Remove only your clean worktree after its work is safely pushed and reviewed; leave other tasks' worktrees alone. There is no managed test environment or port configuration to copy from Product Bundles.
+- This repository and the WooCommerce organization currently provide no default PR template. Use a brief description with `Changes proposed`, `How to test`, and `Changelog` sections, starting with `Closes LINEAR_ID`. Draft PRs and permission boundaries follow the workspace rules. No milestone checkbox/automation is present.
+- Release versions appear in the plugin header, class `$version`, `package.json`, and `readme.txt`. The changelog lives directly in `readme.txt`; there is no Changelogger or checked-in release workflow. Confirm the publishing procedure before a release. Do not infer a release command from the parent Product Bundles repo.
+- Documentation-only changes need no user-facing changelog entry; state that in the PR. For behavior changes, use the existing one-line changelog style and keep the changelog in its own final commit. Do not alter released version numbers for docs.
+- Build/runtime modernization, stronger lint enforcement, broader tests, a PR template/milestone workflow, and release automation remain separate alignment work. Keep the current tooling accurately documented until those decisions are made.
 
 ## Shared implementation safeguards
 
-These safeguards complement the repository-specific guidance. In the SWW workspace,
-the parent `AGENTS.md` remains authoritative for approvals, GitHub writes, and Linear
-workflow. Local instructions do not relax it.
+These safeguards complement the repository-specific guidance. In the SWW workspace, the parent `AGENTS.md` remains authoritative for approvals, GitHub writes, and Linear workflow. Local instructions do not relax it.
 
 ### Compatibility and extension contracts
 
-- Preserve existing public symbols, signatures, hooks, hook timing, templates, and
-  persisted formats. Assume unseen consumers in extensions, themes, and merchant
-  snippets. State the compatibility impact in the PR when changing an exposed surface.
-  If that impact cannot be established, stop and flag it for review before changing it.
-- Deprecate instead of removing or renaming a public contract in place. Keep the old
-  symbol working alongside its replacement for a migration window. Append hook
-  arguments; do not remove or reorder existing ones. Retire hooks through
-  `do_action_deprecated()` or `apply_filters_deprecated()`.
-- Adding a required interface method breaks existing implementers. Removing an
-  interface requirement does not make an implementation's extra method invalid, but
-  it changes the contract available to consumers. Assess both callers and implementers.
-- Public and protected overrides are contracts, including whether they run. A fast
-  path that skips an overridable method can disable third-party behavior without
-  changing a signature. Preserve those calls or treat the change as breaking.
-- Adding or tightening parameter/return types can reject previously accepted values
-  or break subclasses. PHP still coerces some scalar values in weak mode, so assess
-  actual inputs rather than claiming every numeric string fails. Adding
-  `declare(strict_types=1)` changes scalar checks on calls made from that file.
-- Do not add parameter or return types to filter callbacks, or parameter types to
-  action callbacks. Validate values in the body. A filter must preserve an unexpected
-  value unchanged rather than discard another extension's customization.
-- Registered script/style handles are public contracts. Preserve old handles during
-  renames as aliases depending on the new handle; do not load the same file twice.
-- Guard global and lifecycle dependencies in admin, REST, CLI, cron, AJAX, and frontend
-  contexts. Check the required WooCommerce component before dereferencing it.
-- Account for multisite storage and nonstandard install layouts. Derive paths and
-  URLs with WordPress APIs. For state changes, report whether multisite was tested.
+- Preserve existing public symbols, signatures, hooks, hook timing, templates, and persisted formats. Assume unseen consumers in extensions, themes, and merchant snippets. State the compatibility impact in the PR when changing an exposed surface. If that impact cannot be established, stop and flag it for review before changing it.
+- Deprecate instead of removing or renaming a public contract in place. Keep the old symbol working alongside its replacement for a migration window. Append hook arguments; do not remove or reorder existing ones. Retire hooks through `do_action_deprecated()` or `apply_filters_deprecated()`.
+- Adding a required interface method breaks existing implementers. Removing an interface requirement does not make an implementation's extra method invalid, but it changes the contract available to consumers. Assess both callers and implementers.
+- Public and protected overrides are contracts, including whether they run. A fast path that skips an overridable method can disable third-party behavior without changing a signature. Preserve those calls or treat the change as breaking.
+- Adding or tightening parameter/return types can reject previously accepted values or break subclasses. PHP still coerces some scalar values in weak mode, so assess actual inputs rather than claiming every numeric string fails. Adding `declare(strict_types=1)` changes scalar checks on calls made from that file.
+- Do not add parameter or return types to filter callbacks, or parameter types to action callbacks. Validate values in the body. A filter must preserve an unexpected value unchanged rather than discard another extension's customization.
+- Registered script/style handles are public contracts. Preserve old handles during renames as aliases depending on the new handle; do not load the same file twice.
+- Guard global and lifecycle dependencies in admin, REST, CLI, cron, AJAX, and frontend contexts. Check the required WooCommerce component before dereferencing it.
+- Account for multisite storage and nonstandard install layouts. Derive paths and URLs with WordPress APIs. For state changes, report whether multisite was tested.
 
 ### Upgrades and persistent data
 
 When a change introduces or alters persistent state:
 
-- Add a version-gated migration reachable by existing installs. Fresh-install setup
-  alone is insufficient. Never edit or reuse an already-shipped migration version.
-- Make migrations idempotent and batch large updates. New code must read both old
-  and new formats until the migration completes, including requests before cron runs.
-- Preserve compatibility with the previous release after migration so rolling back
-  does not fatal or corrupt data. Retain readable old formats for a transition period.
+- Add a version-gated migration reachable by existing installs. Fresh-install setup alone is insufficient. Never edit or reuse an already-shipped migration version.
+- Make migrations idempotent and batch large updates. New code must read both old and new formats until the migration completes, including requests before cron runs.
+- Preserve compatibility with the previous release after migration so rolling back does not fatal or corrupt data. Retain readable old formats for a transition period.
 - Do not silently change defaults for existing stores; gate new defaults to new installs.
-- Preserve cron/action names with queued jobs and stored option/meta keys, or provide
-  a migration and transition path. Do not assume removing code removes stored data.
+- Preserve cron/action names with queued jobs and stored option/meta keys, or provide a migration and transition path. Do not assume removing code removes stored data.
 
 ### Core APIs, security, and defensive coding
 
-- Use WordPress/WooCommerce APIs and existing repository abstractions before adding
-  helpers: HTTP APIs, CRUD/data stores, queries, templates, formatting, caches, and
-  Action Scheduler. Preserve HPOS, filters, caching, and theme overrides.
-- Validate filter results before indexing or passing them to typed APIs, including
-  values from filterable WooCommerce helpers. Use a meaningful supported default,
-  not an arbitrary zero or empty value.
-- Check optional methods with `method_exists()` across supported WC versions. Exclude
-  `WP_Error` explicitly; it is truthy. Validate array/object shapes before use.
-- Before changing filter registrations, inspect `has_filter()` and retain the callback
-  and priority. Restore only state this operation changed; cleanup must not remove
-  registrations owned by the caller.
-- Require authorization/capability checks for state changes and appropriate nonce
-  checks for cookie-authenticated requests. REST routes need real permission and
-  argument validation/sanitization callbacks. Admin location alone is not protection.
-- Unslash then sanitize request data, escape at output for its context, and prepare
-  interpolated SQL with `$wpdb->prepare()`; use an allowlist where needed for identifiers.
-- Do not deserialize untrusted objects, evaluate input as code, construct callables
-  from user input, or allow unrestricted uploads. Use safe redirects and keep secrets
-  and personal data out of source and logs.
-- Avoid unbounded queries/updates and repeated queries in loops. Reuse existing caches,
-  invalidate them on writes, and batch expensive work with a bounded memory footprint.
+- Use WordPress/WooCommerce APIs and existing repository abstractions before adding helpers: HTTP APIs, CRUD/data stores, queries, templates, formatting, caches, and Action Scheduler. Preserve HPOS, filters, caching, and theme overrides.
+- Validate filter results before indexing or passing them to typed APIs, including values from filterable WooCommerce helpers. Use a meaningful supported default, not an arbitrary zero or empty value.
+- Check optional methods with `method_exists()` across supported WC versions. Exclude `WP_Error` explicitly; it is truthy. Validate array/object shapes before use.
+- Before changing filter registrations, inspect `has_filter()` and retain the callback and priority. Restore only state this operation changed; cleanup must not remove registrations owned by the caller.
+- Require authorization/capability checks for state changes and appropriate nonce checks for cookie-authenticated requests. REST routes need real permission and argument validation/sanitization callbacks. Admin location alone is not protection.
+- Unslash then sanitize request data, escape at output for its context, and prepare interpolated SQL with `$wpdb->prepare()`; use an allowlist where needed for identifiers.
+- Do not deserialize untrusted objects, evaluate input as code, construct callables from user input, or allow unrestricted uploads. Use safe redirects and keep secrets and personal data out of source and logs.
+- Avoid unbounded queries/updates and repeated queries in loops. Reuse existing caches, invalidate them on writes, and batch expensive work with a bounded memory footprint.
 
 ### Validation and change scope
 
-- Keep changes focused; preserve existing conventions and supported runtimes. Edit
-  the actual source files, not generated output, using the repository's asset map.
-- For behavior fixes, reproduce the failure at the relevant test layer and verify the
-  result. Cover boundary/error inputs, filtered values, existing data, and affected
-  integrations with meaningful assertions; do not merely mirror the implementation.
-- Use the repository's existing test frameworks. Run checks appropriate to the changed
-  files and report failures, skipped checks, and untested layers accurately. Documentation
-  changes need command/path and formatting verification, not invented runtime tests.
-- Use isolated worktrees and environment ports where the repository supports them.
-  Follow Linear-generated branch names when working from an issue. Keep commits small
-  and stage only intended paths; never bypass hooks to force a commit through.
-- Follow the current PR template. Changelog exemptions and milestone automation differ
-  by repository: describe the actual workflow and missing automation rather than
-  inventing checkboxes, changing labels without authorization, or claiming checks passed.
+- Keep changes focused; preserve existing conventions and supported runtimes. Edit the actual source files, not generated output, using the repository's asset map.
+- For behavior fixes, reproduce the failure at the relevant test layer and verify the result. Cover boundary/error inputs, filtered values, existing data, and affected integrations with meaningful assertions; do not merely mirror the implementation.
+- Use the repository's existing test frameworks. Run checks appropriate to the changed files and report failures, skipped checks, and untested layers accurately. Documentation changes need command/path and formatting verification, not invented runtime tests.
+- Use isolated worktrees and environment ports where the repository supports them. Follow Linear-generated branch names when working from an issue. Keep commits small and stage only intended paths; never bypass hooks to force a commit through.
+- Follow the current PR template. Changelog exemptions and milestone automation differ by repository: describe the actual workflow and missing automation rather than inventing checkboxes, changing labels without authorization, or claiming checks passed.
