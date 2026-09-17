@@ -1,4 +1,4 @@
-# Copyright (C) 2024 WooCommerce
+# Copyright (C) 2026 WooCommerce
 # This file is distributed under the GNU General Public License v3.0.
 msgid ""
 msgstr ""
@@ -6,43 +6,45 @@ msgstr ""
 "Report-Msgid-Bugs-To: "
 "https://wordpress.org/support/plugin/woocommerce-product-bundles-bulk-"
 "discounts\n"
-"POT-Creation-Date: 2024-09-19 06:24:19+00:00\n"
+"POT-Creation-Date: 2026-09-17 20:11:07+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:288
-#: product-bundles-bulk-discounts-for-woocommerce.php:301
-#: product-bundles-bulk-discounts-for-woocommerce.php:393
-msgid "Line <strong> %s </strong> not saved. Invalid format."
+#: product-bundles-bulk-discounts-for-woocommerce.php:277
+#: product-bundles-bulk-discounts-for-woocommerce.php:282
+#: product-bundles-bulk-discounts-for-woocommerce.php:325
+#: product-bundles-bulk-discounts-for-woocommerce.php:468
+msgid "Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:335
-#: product-bundles-bulk-discounts-for-woocommerce.php:344
-#: product-bundles-bulk-discounts-for-woocommerce.php:352
-msgid "Line <strong> %s </strong> not saved. Overlapping data."
+#: product-bundles-bulk-discounts-for-woocommerce.php:289
+#: product-bundles-bulk-discounts-for-woocommerce.php:299
+#: product-bundles-bulk-discounts-for-woocommerce.php:329
+#: product-bundles-bulk-discounts-for-woocommerce.php:338
+msgid "Bulk discounts were not saved. Check the quantity ranges and percentages."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:364
-msgid "Line <strong> %s </strong> not saved. Invalid discount."
+#: product-bundles-bulk-discounts-for-woocommerce.php:350
+msgid "Bulk discounts were not saved. Quantity ranges must not overlap."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:431
+#: product-bundles-bulk-discounts-for-woocommerce.php:383
 msgid ""
 "<strong>Product Bundles &ndash; Bulk Discounts</strong> requires <a "
 "href=\"%1$s\" target=\"_blank\">WooCommerce Product Bundles</a> version "
 "<strong>%2$s</strong> or higher."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:448
+#: product-bundles-bulk-discounts-for-woocommerce.php:400
 msgid "Bulk Discounts"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:449
+#: product-bundles-bulk-discounts-for-woocommerce.php:401
 msgid ""
 "Define bulk discounts by adding one discount rule per line in either: i) "
 "quantity range format, e.g. <strong>1 - 5 | 5</strong>, ii) single quantity "
@@ -51,19 +53,19 @@ msgid ""
 "expressed in % only."
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:833
+#: product-bundles-bulk-discounts-for-woocommerce.php:809
 msgid "%s <small>(before discount)</small>"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:929
+#: product-bundles-bulk-discounts-for-woocommerce.php:906
 msgid "Subtotal: "
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:930
+#: product-bundles-bulk-discounts-for-woocommerce.php:907
 msgid "Discount: "
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:931
+#: product-bundles-bulk-discounts-for-woocommerce.php:908
 msgid "%s%%"
 msgstr ""
 
@@ -89,7 +91,7 @@ msgstr ""
 msgid "https://woocommerce.com/"
 msgstr ""
 
-#: product-bundles-bulk-discounts-for-woocommerce.php:932
+#: product-bundles-bulk-discounts-for-woocommerce.php:909
 msgctxt "\"Discount\" string followed by value"
 msgid "%1$s%2$s"
 msgstr ""

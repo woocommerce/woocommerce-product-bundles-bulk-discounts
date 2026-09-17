@@ -121,6 +121,20 @@ assert_same( array(
 assert_same( 5.5, WC_PB_Bulk_Discounts::get_discount( 5, $product->data ), 'Inclusive range boundary still selects the same discount.' );
 assert_same( 7.0, WC_PB_Bulk_Discounts::get_discount( 100, $product->data ), 'The existing open-ended tier still applies.' );
 
+$_POST['_wc_pb_quantity_discount_data'] = "4 - 5 | 5\n6 - 9 | 10\n10 + | 15";
+WC_PB_Bulk_Discounts::save_meta( $product );
+$documented_rules = array(
+	array( 'quantity_min' => 4, 'quantity_max' => 5, 'discount' => 5.0 ),
+	array( 'quantity_min' => 6, 'quantity_max' => 9, 'discount' => 10.0 ),
+	array( 'quantity_min' => 10, 'quantity_max' => INF, 'discount' => 15.0 ),
+);
+assert_same( $documented_rules, $product->data, 'The documented spaced open-ended syntax remains valid.' );
+$decode = new ReflectionMethod( WC_PB_Bulk_Discounts::class, 'decode' );
+$decode->setAccessible( true );
+$_POST['_wc_pb_quantity_discount_data'] = $decode->invoke( null, $product->data );
+WC_PB_Bulk_Discounts::save_meta( $product );
+assert_same( $documented_rules, $product->data, 'Existing tiers must survive the editor display and re-save round trip.' );
+
 $limit_rules = array();
 foreach ( range( 1, 100 ) as $quantity ) {
 	$limit_rules[] = array( 'quantity_min' => $quantity, 'quantity_max' => $quantity, 'discount' => 5 );
