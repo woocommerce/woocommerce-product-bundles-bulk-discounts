@@ -29,6 +29,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class WC_PB_Bulk_Discounts {
 
+	// Limit new input without truncating discounts already stored on products.
+	const MAX_DISCOUNT_RULES = 100;
+	const MAX_DISCOUNT_BYTES = 32768;
+
 	/**
 	 * Plugin version.
 	 *
@@ -115,6 +119,7 @@ class WC_PB_Bulk_Discounts {
 
 		// Parse and import bulk discounts.
 		add_filter( 'woocommerce_product_importer_parsed_data', array( __CLASS__, 'import_bulk_discounts' ), 10, 1 );
+		add_filter( 'woocommerce_product_import_process_item_data', array( __CLASS__, 'validate_import_bulk_discounts' ) );
 
 		/*
 		 * Cart.
@@ -264,142 +269,89 @@ class WC_PB_Bulk_Discounts {
 	 * Encodes $input_data string to array by separating quantity_min, quantity_max and discount.
 	 *
 	 * @param  string  $input_data
-	 * @return array   $parsed_discount_data
+	 * @return array|WP_Error $parsed_discount_data
 	 */
 	private static function encode( $input_data ) {
 
-		$parsed_discount_data = array();
-		$input_data           = wc_sanitize_textarea( $input_data );
+		if ( ! is_string( $input_data ) || strlen( $input_data ) > self::MAX_DISCOUNT_BYTES ) {
+			return new WP_Error( 'bulk_discount_size', __( 'Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text.', 'woocommerce-product-bundles-bulk-discounts' ) );
+		}
 
-		if ( ! empty( $input_data ) ) {
+		$lines = array_filter( array_map( 'trim', explode( "\n", wc_sanitize_textarea( $input_data ) ) ), 'strlen' );
+		if ( count( $lines ) > self::MAX_DISCOUNT_RULES ) {
+			return new WP_Error( 'bulk_discount_size', __( 'Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text.', 'woocommerce-product-bundles-bulk-discounts' ) );
+		}
 
-			$input_data = array_filter( array_map( 'trim', explode( "\n", $input_data ) ) );
+		$rules = array();
+		foreach ( $lines as $line ) {
+			$parts = array_map( 'trim', explode( '|', $line ) );
+			if ( 2 !== count( $parts ) ) {
+				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
+			}
+			$range = array_map( 'trim', explode( '-', $parts[0] ) );
+			$min   = $range[0];
+			$max   = isset( $range[1] ) ? $range[1] : $min;
+			if ( 1 === count( $range ) && '+' === substr( $min, -1 ) ) {
+				$min = trim( substr( $min, 0, -1 ) );
+				$max = INF;
+			}
+			if ( count( $range ) > 2 ) {
+				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
+			}
+			$rules[] = array( 'quantity_min' => $min, 'quantity_max' => $max, 'discount' => $parts[1] );
+		}
 
-			// Explode based on "|".
-			foreach ( $input_data as $discount_line ) {
+		$validated = self::validate_discount_rules( $rules );
+		if ( is_wp_error( $validated ) ) {
+			return $validated;
+		}
+		foreach ( $rules as &$rule ) {
+			$rule['quantity_min'] = (int) $rule['quantity_min'];
+			$rule['quantity_max'] = is_infinite( (float) $rule['quantity_max'] ) ? INF : (int) $rule['quantity_max'];
+			$rule['discount']     = (float) $rule['discount'];
+		}
+		return $rules;
+	}
 
-				$line_error_notice_added        = false;
-				$discount_line_seperator_pieces = array_map( 'trim', explode( "|", $discount_line ) );
+	/**
+	 * Validate bounded tier data without changing stored order or numeric types.
+	 *
+	 * @param array $rules Discount tiers.
+	 * @return array|WP_Error
+	 */
+	private static function validate_discount_rules( $rules ) {
 
-				// Validate that only one "|" exist in each line.
-				if ( 2 !== sizeof( $discount_line_seperator_pieces ) ) {
-
-					if ( ! $line_error_notice_added ) {
-						WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Invalid format.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-						$line_error_notice_added = true;
-						continue;
-					}
-				}
-
-				$discount_line_dash_pieces = array_map( 'trim', explode( "-", $discount_line_seperator_pieces[ 0 ] ) );
-
-				// Validate that only at most one "-" exist in each line.
-				if ( sizeof( $discount_line_dash_pieces ) > 2 ) {
-
-					if ( ! $line_error_notice_added ) {
-
-						WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Invalid format.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-						$line_error_notice_added = true;
-						continue;
-					}
-
-				} else {
-
-					if ( 2 === sizeof( $discount_line_dash_pieces ) ) {
-
-						$quantity_min = $discount_line_dash_pieces[0];
-						$quantity_max = $discount_line_dash_pieces[1];
-
-					} else {
-
-						$quantity_min = $discount_line_dash_pieces[0];
-						$quantity_max = $quantity_min;
-
-						if ( '+' === substr( $quantity_min, -1 ) ) {
-							$quantity_min = rtrim( $quantity_min, '+ ' );
-							$quantity_max = INF;
-						}
-					}
-
-					if ( is_numeric( $quantity_min ) && is_numeric( $quantity_max )  ) {
-
-						if ( ! empty( $parsed_discount_data ) ) {
-
-							// Check for overlap.
-							foreach ( $parsed_discount_data as $lines ) {
-
-								if ( $lines[ 'quantity_min' ] <= $quantity_min && $lines[ 'quantity_max' ] >= $quantity_min ) {
-
-									if ( ! $line_error_notice_added ) {
-
-										WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Overlapping data.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-										$line_error_notice_added = true;
-										continue 2;
-									}
-
-								} elseif ( $lines[ 'quantity_min' ] <= $quantity_max && $lines[ 'quantity_max' ] >= $quantity_max ) {
-
-									if ( ! $line_error_notice_added ) {
-
-										WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Overlapping data.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-										$line_error_notice_added = true;
-										continue 2;
-									}
-
-								} elseif ( $lines[ 'quantity_min' ] >= $quantity_min && $lines[ 'quantity_max' ] <= $quantity_max ) {
-
-									if ( ! $line_error_notice_added ) {
-										WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Overlapping data.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-										$line_error_notice_added = true;
-										continue 2;
-									}
-								}
-							}
-						}
-
-						if ( 0 > $discount_line_seperator_pieces[1] || 100 < $discount_line_seperator_pieces[1] ) {
-
-							if ( ! $line_error_notice_added ) {
-
-								WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Invalid discount.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-								$line_error_notice_added = true;
-								continue;
-							}
-						}
-
-						if ( is_infinite( $quantity_max ) ) {
-
-							$parsed_discount_data[] = array(
-								'quantity_min' => intval( $quantity_min ),
-								'quantity_max' => INF,
-								'discount'     => floatval( $discount_line_seperator_pieces[1])
-							);
-
-						} else {
-
-							$parsed_discount_data[] = array(
-								'quantity_min' => intval( $quantity_min ),
-								'quantity_max' => intval( $quantity_max ),
-								'discount'     => floatval( $discount_line_seperator_pieces[1])
-							);
-						}
-
-
-					// Non numeric data entered.
-					} else {
-
-						if ( ! $line_error_notice_added ) {
-
-							WC_PB_Meta_Box_Product_Data::add_admin_notice( sprintf( __( 'Line <strong> %s </strong> not saved. Invalid format.', 'woocommerce-product-bundles-bulk-discounts' ), $discount_line ), 'error' );
-							$line_error_notice_added = true;
-							continue;
-						}
-					}
-				}
+		if ( ! is_array( $rules ) || count( $rules ) > self::MAX_DISCOUNT_RULES || array_values( $rules ) !== $rules ) {
+			return new WP_Error( 'bulk_discount_size', __( 'Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text.', 'woocommerce-product-bundles-bulk-discounts' ) );
+		}
+		foreach ( $rules as $rule ) {
+			if ( ! is_array( $rule ) || 3 !== count( $rule ) || ! isset( $rule['quantity_min'], $rule['quantity_max'], $rule['discount'] ) ) {
+				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
+			}
+			$min      = $rule['quantity_min'];
+			$max      = $rule['quantity_max'];
+			$discount = $rule['discount'];
+			if ( ! is_numeric( $min ) || ! is_numeric( $max ) || ! is_numeric( $discount )
+				|| ! is_finite( (float) $min ) || $min < 0 || $min > PHP_INT_MAX || (int) $min < 0 || floor( (float) $min ) != $min
+				|| $max < $min || ( INF !== $max && ( ! is_finite( (float) $max ) || $max > PHP_INT_MAX || (int) $max < 0 || floor( (float) $max ) != $max ) )
+				|| ! is_finite( (float) $discount ) || $discount < 0 || $discount > 100 ) {
+				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
 			}
 		}
 
-		return $parsed_discount_data;
+		// Sort a copy: valid CSV round trips retain their original order and types.
+		$sorted = $rules;
+		usort( $sorted, static function ( $left, $right ) {
+			return $left['quantity_min'] <=> $right['quantity_min'];
+		} );
+		$previous_max = -1;
+		foreach ( $sorted as $rule ) {
+			if ( $rule['quantity_min'] <= $previous_max ) {
+				return new WP_Error( 'bulk_discount_overlap', __( 'Bulk discounts were not saved. Quantity ranges must not overlap.', 'woocommerce-product-bundles-bulk-discounts' ) );
+			}
+			$previous_max = $rule['quantity_max'];
+		}
+		return $rules;
 	}
 
 	/**
@@ -460,10 +412,19 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function save_meta( $product ) {
 
-		$input_data           = $_POST[ '_wc_pb_quantity_discount_data' ];
+		if ( ! isset( $_POST['_wc_pb_quantity_discount_data'] ) ) {
+			return;
+		}
+		$input_data = $_POST['_wc_pb_quantity_discount_data'];
+		if ( is_string( $input_data ) && strlen( $input_data ) <= self::MAX_DISCOUNT_BYTES ) {
+			$input_data = wp_unslash( $input_data );
+		}
 		$parsed_discount_data = self::encode( $input_data );
-
-		if ( ! empty( $_POST[ '_wc_pb_quantity_discount_data' ] ) ) {
+		if ( is_wp_error( $parsed_discount_data ) ) {
+			WC_PB_Meta_Box_Product_Data::add_admin_notice( esc_html( $parsed_discount_data->get_error_message() ), 'error' );
+			return;
+		}
+		if ( ! empty( $parsed_discount_data ) ) {
 			$product->add_meta_data( '_wc_pb_quantity_discount_data', $parsed_discount_data, true );
 		} else {
 			$product->delete_meta_data( '_wc_pb_quantity_discount_data' );
@@ -495,25 +456,40 @@ class WC_PB_Bulk_Discounts {
 	 */
 	public static function import_bulk_discounts( $parsed_data ) {
 
-		if ( empty( $parsed_data[ 'meta_data' ] ) ) {
+		if ( empty( $parsed_data['meta_data'] ) ) {
 			return $parsed_data;
 		}
-
-		foreach ( $parsed_data[ 'meta_data' ] as $index => $meta_data ) {
-
-			if ( '_wc_pb_quantity_discount_data' === $meta_data[ 'key' ] ) {
-
-				if ( ! empty( $meta_data[ 'value' ] ) ) {
-
-					$meta_data[ 'value' ]                 = json_decode( $meta_data[ 'value' ], true );
-					$parsed_data[ 'meta_data' ][ $index ] = $meta_data;
-				}
-
-				break;
-
+		foreach ( $parsed_data['meta_data'] as $index => $meta_data ) {
+			if ( '_wc_pb_quantity_discount_data' !== $meta_data['key'] ) {
+				continue;
+			}
+			$value = $meta_data['value'];
+			if ( ! is_string( $value ) || strlen( $value ) > self::MAX_DISCOUNT_BYTES ) {
+				$rules = new WP_Error( 'bulk_discount_size', __( 'Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text.', 'woocommerce-product-bundles-bulk-discounts' ) );
+			} else {
+				$rules = self::validate_discount_rules( '' === $value ? array() : json_decode( $value, true, 4 ) );
+			}
+			if ( is_wp_error( $rules ) ) {
+				unset( $parsed_data['meta_data'][ $index ] );
+				$parsed_data['wc_pb_bulk_discounts_error'] = $rules->get_error_message();
+			} else {
+				$parsed_data['meta_data'][ $index ]['value'] = $rules;
 			}
 		}
+		return $parsed_data;
+	}
 
+	/**
+	 * Report invalid tiers through the importer's native per-row error handling.
+	 *
+	 * @param array $parsed_data Parsed product data.
+	 * @return array
+	 * @throws Exception When a discount field is invalid.
+	 */
+	public static function validate_import_bulk_discounts( $parsed_data ) {
+		if ( is_array( $parsed_data ) && ! empty( $parsed_data['wc_pb_bulk_discounts_error'] ) && is_string( $parsed_data['wc_pb_bulk_discounts_error'] ) ) {
+			throw new Exception( $parsed_data['wc_pb_bulk_discounts_error'] );
+		}
 		return $parsed_data;
 	}
 
@@ -885,23 +861,24 @@ class WC_PB_Bulk_Discounts {
 
 		if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
 
-			// INF cannot be JSON-encoded :)
-			foreach ( $discount_data_array as $line_key => $line ) {
-				if ( isset( $line[ 'quantity_max' ] ) && is_infinite( $line[ 'quantity_max' ] ) ) {
-					$discount_data_array[ $line_key ][ 'quantity_max' ] = '';
-				}
-			}
-
 			$apply_discount_to_base_price = self::apply_discount_to_base_price( $bundle );
+			if ( $apply_discount_to_base_price || $bundle->contains( 'priced_individually' ) ) {
+				// INF cannot be JSON-encoded :)
+				foreach ( $discount_data_array as $line_key => $line ) {
+					if ( isset( $line[ 'quantity_max' ] ) && is_infinite( $line[ 'quantity_max' ] ) ) {
+						$discount_data_array[ $line_key ][ 'quantity_max' ] = '';
+					}
+				}
 
-			$price_data[ 'bulk_discount_data' ] = array(
-				'discount_array' => $discount_data_array,
-				'discount_base'  => $apply_discount_to_base_price ? 'yes' : 'no'
-			);
+				$price_data[ 'bulk_discount_data' ] = array(
+					'discount_array' => $discount_data_array,
+					'discount_base'  => $apply_discount_to_base_price ? 'yes' : 'no'
+				);
 
-			// Keep total visible when discounting the base price.
-			if ( $apply_discount_to_base_price ) {
-				$price_data[ 'raw_bundle_price_max' ] = '';
+				// Keep total visible when discounting the base price.
+				if ( $apply_discount_to_base_price ) {
+					$price_data[ 'raw_bundle_price_max' ] = '';
+				}
 			}
 		}
 
