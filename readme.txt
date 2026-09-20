@@ -90,8 +90,10 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 == Changelog ==
 
 = Unreleased =
-* Security - Bound bulk-discount editor and CSV input and omit unused frontend tier data.
+* Security - Bound bulk-discount editor and CSV input.
 * Fix - Preserved open-ended discount tiers in CSV exports and imports.
+* Fix - Preserved frontend discount tier data for extensions.
+* Fix - Rejected incomplete editor ranges without replacing saved discount tiers.
 
 = 2.0.2 =
 * Security - Hardened product CSV exports against malformed bulk discount metadata.
