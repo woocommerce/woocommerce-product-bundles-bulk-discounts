@@ -6,7 +6,9 @@ function add_action( $hook_name, $callback ) {}
 function __( $text, $domain = '' ) { return $text; }
 function is_wp_error( $value ) { return $value instanceof WP_Error; }
 class WP_Error {
-	public function __construct( $code, $message ) {}
+	private $message;
+	public function __construct( $code, $message ) { $this->message = $message; }
+	public function get_error_message() { return $this->message; }
 }
 
 require_once dirname( __DIR__ ) . '/product-bundles-bulk-discounts-for-woocommerce.php';
@@ -43,6 +45,8 @@ class Normal_Discounts_Bundled_Item {
 class Normal_Discounts_Bundle {
 	public $rules;
 	public function get_meta( $key, $single ) { return $this->rules; }
+	public function add_meta_data( $key, $value, $unique ) { $this->rules = $value; }
+	public function delete_meta_data( $key ) { $this->rules = array(); }
 	public function contains( $key ) { return false; }
 	public function get_bundled_items() { return array( new Normal_Discounts_Bundled_Item() ); }
 }
@@ -61,3 +65,28 @@ if ( INF !== $bundle->rules[2]['quantity_max'] ) {
 	throw new RuntimeException( 'Frontend normalization must preserve the stored tier representation.' );
 }
 echo "Normal frontend discount payload passed (3 assertions).\n";
+
+function wc_sanitize_textarea( $value ) { return $value; }
+function wp_unslash( $value ) { return stripslashes( $value ); }
+function esc_html( $value ) { return htmlspecialchars( $value, ENT_QUOTES ); }
+class WC_PB_Meta_Box_Product_Data {
+	public static $notices = array();
+	public static function add_admin_notice( $message, $type ) { self::$notices[] = array( $message, $type ); }
+}
+$posted_data = $_POST;
+try {
+	$_POST['_wc_pb_quantity_discount_data'] = '10 - | 15';
+	WC_PB_Bulk_Discounts::save_meta( $bundle );
+	if ( $rules !== $bundle->rules || 1 !== count( WC_PB_Meta_Box_Product_Data::$notices ) ) {
+		throw new RuntimeException( 'An unfinished editor range must show an error and preserve the saved tiers.' );
+	}
+	WC_PB_Meta_Box_Product_Data::$notices = array();
+	$_POST['_wc_pb_quantity_discount_data'] = '10+ | 15';
+	WC_PB_Bulk_Discounts::save_meta( $bundle );
+	if ( array( array( 'quantity_min' => 10, 'quantity_max' => INF, 'discount' => 15.0 ) ) !== $bundle->rules || WC_PB_Meta_Box_Product_Data::$notices ) {
+		throw new RuntimeException( 'The documented open-ended editor format must still save normally.' );
+	}
+} finally {
+	$_POST = $posted_data;
+}
+echo "Normal editor range validation passed (2 assertions).\n";

@@ -295,7 +295,7 @@ class WC_PB_Bulk_Discounts {
 				$min = trim( substr( $min, 0, -1 ) );
 				$max = INF;
 			}
-			if ( count( $range ) > 2 ) {
+			if ( count( $range ) > 2 || '' === $max ) {
 				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
 			}
 			$rules[] = array( 'quantity_min' => $min, 'quantity_max' => $max, 'discount' => $parts[1] );
