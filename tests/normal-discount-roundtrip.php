@@ -1,5 +1,5 @@
 <?php
-/** Ordinary CSV round trips for finite and open-ended discount tiers. */
+/** Ordinary CSV and frontend price-data compatibility for discount tiers. */
 
 define( 'ABSPATH', __DIR__ );
 function add_action( $hook_name, $callback ) {}
@@ -34,3 +34,30 @@ if ( INF !== $rules[2]['quantity_max'] ) {
 	throw new RuntimeException( 'Export must preserve the stored PHP representation.' );
 }
 echo "Normal discount CSV round trip passed (4 assertions).\n";
+
+function apply_filters( $hook, $value, $bundle ) { return false; }
+class Normal_Discounts_Bundled_Item {
+	public function get_id() { return 1; }
+	public function is_discount_allowed_on_sale_price() { return true; }
+}
+class Normal_Discounts_Bundle {
+	public $rules;
+	public function get_meta( $key, $single ) { return $this->rules; }
+	public function contains( $key ) { return false; }
+	public function get_bundled_items() { return array( new Normal_Discounts_Bundled_Item() ); }
+}
+$bundle = new Normal_Discounts_Bundle();
+$bundle->rules = $rules;
+$price_data = WC_PB_Bulk_Discounts::add_discount_data( array( 'original' => 'keep' ), $bundle );
+$frontend_rules = $rules;
+$frontend_rules[2]['quantity_max'] = '';
+if ( ! isset( $price_data['bulk_discount_data'] ) || array( 'discount_array' => $frontend_rules, 'discount_base' => 'no' ) !== $price_data['bulk_discount_data'] ) {
+	throw new RuntimeException( 'Saved tiers must remain available in the frontend payload even when core prices do not use them.' );
+}
+if ( 'keep' !== $price_data['original'] || array( 1 => 'no' ) !== $price_data['bulk_discounts_on_regular_price'] ) {
+	throw new RuntimeException( 'Frontend tier data must preserve other price-data fields.' );
+}
+if ( INF !== $bundle->rules[2]['quantity_max'] ) {
+	throw new RuntimeException( 'Frontend normalization must preserve the stored tier representation.' );
+}
+echo "Normal frontend discount payload passed (3 assertions).\n";

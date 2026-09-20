@@ -867,24 +867,23 @@ class WC_PB_Bulk_Discounts {
 
 		if ( ! empty( $discount_data_array ) && is_array( $discount_data_array ) ) {
 
+			// INF cannot be JSON-encoded :)
+			foreach ( $discount_data_array as $line_key => $line ) {
+				if ( isset( $line[ 'quantity_max' ] ) && is_infinite( $line[ 'quantity_max' ] ) ) {
+					$discount_data_array[ $line_key ][ 'quantity_max' ] = '';
+				}
+			}
+
 			$apply_discount_to_base_price = self::apply_discount_to_base_price( $bundle );
-			if ( $apply_discount_to_base_price || $bundle->contains( 'priced_individually' ) ) {
-				// INF cannot be JSON-encoded :)
-				foreach ( $discount_data_array as $line_key => $line ) {
-					if ( isset( $line[ 'quantity_max' ] ) && is_infinite( $line[ 'quantity_max' ] ) ) {
-						$discount_data_array[ $line_key ][ 'quantity_max' ] = '';
-					}
-				}
 
-				$price_data[ 'bulk_discount_data' ] = array(
-					'discount_array' => $discount_data_array,
-					'discount_base'  => $apply_discount_to_base_price ? 'yes' : 'no'
-				);
+			$price_data[ 'bulk_discount_data' ] = array(
+				'discount_array' => $discount_data_array,
+				'discount_base'  => $apply_discount_to_base_price ? 'yes' : 'no'
+			);
 
-				// Keep total visible when discounting the base price.
-				if ( $apply_discount_to_base_price ) {
-					$price_data[ 'raw_bundle_price_max' ] = '';
-				}
+			// Keep total visible when discounting the base price.
+			if ( $apply_discount_to_base_price ) {
+				$price_data[ 'raw_bundle_price_max' ] = '';
 			}
 		}
 

@@ -192,7 +192,7 @@ $bundle = new Bulk_Discounts_Test_Bundle();
 $bundle->rules = $too_many;
 $GLOBALS['test_discount_base'] = false;
 $price_data = WC_PB_Bulk_Discounts::add_discount_data( array( 'original' => 'keep' ), $bundle );
-assert_same( false, isset( $price_data['bulk_discount_data'] ), 'Do not send tiers when neither individual nor base prices use them.' );
+assert_same( $too_many, $price_data['bulk_discount_data']['discount_array'], 'Keep the existing frontend tier payload when core prices do not use it.' );
 assert_same( 'keep', $price_data['original'], 'Preserve caller-owned price data.' );
 assert_same( array( 1 => 'no' ), $price_data['bulk_discounts_on_regular_price'], 'Keep the existing per-item price-data contract.' );
 $bundle->individual = true;
