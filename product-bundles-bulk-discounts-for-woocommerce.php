@@ -324,12 +324,13 @@ class WC_PB_Bulk_Discounts {
 		if ( ! is_array( $rules ) || count( $rules ) > self::MAX_DISCOUNT_RULES || array_values( $rules ) !== $rules ) {
 			return new WP_Error( 'bulk_discount_size', __( 'Bulk discounts were not saved. Use at most 100 rules and 32 KiB of text.', 'woocommerce-product-bundles-bulk-discounts' ) );
 		}
-		foreach ( $rules as $rule ) {
+		foreach ( $rules as $index => $rule ) {
 			if ( ! is_array( $rule ) || 3 !== count( $rule ) || ! isset( $rule['quantity_min'], $rule['quantity_max'], $rule['discount'] ) ) {
 				return new WP_Error( 'bulk_discount_format', __( 'Bulk discounts were not saved. Check the quantity ranges and percentages.', 'woocommerce-product-bundles-bulk-discounts' ) );
 			}
 			$min      = $rule['quantity_min'];
-			$max      = $rule['quantity_max'];
+			$max      = '' === $rule['quantity_max'] ? INF : $rule['quantity_max'];
+			$rules[ $index ]['quantity_max'] = $max;
 			$discount = $rule['discount'];
 			if ( ! is_numeric( $min ) || ! is_numeric( $max ) || ! is_numeric( $discount )
 				|| ! is_finite( (float) $min ) || $min < 0 || $min > PHP_INT_MAX || (int) $min < 0 || floor( (float) $min ) != $min
@@ -441,6 +442,11 @@ class WC_PB_Bulk_Discounts {
 	public static function export_bulk_discounts( $meta_value, $meta ) {
 
 		if ( '_wc_pb_quantity_discount_data' === $meta->key && is_array( $meta_value ) ) {
+			foreach ( $meta_value as $index => $rule ) {
+				if ( is_array( $rule ) && isset( $rule['quantity_max'] ) && INF === $rule['quantity_max'] ) {
+					$meta_value[ $index ]['quantity_max'] = '';
+				}
+			}
 			$meta_value = json_encode( $meta_value );
 
 		}
