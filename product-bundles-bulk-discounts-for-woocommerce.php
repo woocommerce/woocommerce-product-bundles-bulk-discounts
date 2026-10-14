@@ -148,6 +148,7 @@ class WC_PB_Bulk_Discounts {
 		add_action( 'woocommerce_bundled_product_price_filters_removed', array( __CLASS__, 'remove_bundle_discount_price_html_suffix' ), 10, 1 );
 
 		// Bootstrapping.
+		add_action( 'wp_enqueue_scripts', array( __CLASS__, 'register_script' ) );
 		add_action( 'woocommerce_bundle_add_to_cart', array( __CLASS__, 'script' ) );
 		add_action( 'woocommerce_composite_add_to_cart', array( __CLASS__, 'script' ) );
 
@@ -848,15 +849,27 @@ class WC_PB_Bulk_Discounts {
 	}
 
 	/**
+	 * Register the front-end script.
+	 *
+	 * The Bundles and Composites scripts depend on it wherever they load, including bundle sells on products that are not bundles, so it is registered on every page.
+	 *
+	 * @since 2.0.2
+	 */
+	public static function register_script() {
+
+		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+		wp_register_script( 'wc-pb-bd-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-bd-add-to-cart' . $suffix . '.js', array( 'jquery', 'wc-add-to-cart-variation' ), self::$version, true );
+	}
+
+	/**
 	 * Front-end script.
 	 *
 	 * @param  array  $dependencies
 	 */
 	public static function script() {
 
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_register_script( 'wc-pb-bd-add-to-cart', self::plugin_url() . '/assets/js/wc-pb-bd-add-to-cart' . $suffix . '.js', array( 'jquery', 'wc-add-to-cart-variation' ), self::$version, true );
+		self::register_script();
 		wp_register_style( 'wc-pb-bd-styles', self::plugin_url() . '/assets/css/wc-pb-bd-styles.css', false, self::$version, 'all' );
 		wp_enqueue_style( 'wc-pb-bd-styles' );
 	}
