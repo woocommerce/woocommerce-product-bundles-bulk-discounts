@@ -91,6 +91,7 @@ This plugin requires the official [WooCommerce Product Bundles](https://woocomme
 
 = 2.0.2 =
 * Security - Hardened product CSV exports against malformed bulk discount metadata.
+* Fix - Kept bundle sells working on product pages while Bulk Discounts is active.
 
 = 2.0.1 =
 * Tweak - Updated author links.
